@@ -13,7 +13,7 @@ Diese Software soll kleine Musikausschnitte entgegennehmen und diese mit Musikst
 
 ## Beschreibung
 
-Das Endgültige Programm soll folgende Umstände berücksichtigen:
+Das Endgültige Programm soll folgende Implementierungen beinhalten:
 * Im Web-UI sollen Musikstücke eingelernt werden
 * Im Web-UI sollen Musikstücke identifiziert werden
 * Hochgeladenes Musikstück kann im Browser wiedergegeben werden
