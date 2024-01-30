@@ -132,8 +132,6 @@ Inspiration, code snippets, etc.
 * [A simple README.md template](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 * [Python.gitignore](https://github.com/github/gitignore/blob/main/Python.gitignore)
-* [Streamlit-Income-Expense-Tracker](https://github.com/Sven-Bo/streamlit-income-expense-tracker)
-* [Streamlit Switch Page](https://github.com/streamlit/streamlit/issues/4832#issuecomment-1201938174)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
