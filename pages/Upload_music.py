@@ -1,4 +1,7 @@
 import streamlit as st
+import numpy as np
+
+import matplotlib.pyplot as plt
 
 # -------------- SETTINGS --------------
 page_title = "Upload music"
@@ -10,3 +13,9 @@ layout = "centered"
 
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
+
+
+
+
+audio = st.file_uploader("Upload an audio file", type=["mp3"])
+
