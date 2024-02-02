@@ -10,6 +10,6 @@ st.title(page_title + " " + page_icon)
 
 col1, col2 = st.columns(2)
 if col1.button("Upload Music", use_container_width=True):
-    st.switch_page("pages/Recognice_music.py")    
+    st.switch_page("pages/Upload_music.py")   
 if col2.button("Recognice Music", use_container_width=True):
-    st.switch_page("pages/Upload_music.py") 
+    st.switch_page("pages/Recognice_music.py")  
