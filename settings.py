@@ -7,7 +7,7 @@ SAMPLE_RATE = 44100
 FFT_WINDOW_SIZE = 0.025  # 25 ms
 
 # Größe des Peak-Box-Filters
-PEAK_BOX_SIZE = 5
+PEAK_BOX_SIZE = 20
 
 # Punkt-Effizienz für die Berechnung der Ziel-Peaks
 POINT_EFFICIENCY = 0.5
@@ -20,3 +20,6 @@ TARGET_T = 5.0
 
 # Höhe der Zielzone in Hz
 TARGET_F = 5000
+
+#MIN DB FILTER
+MIN_DB_FILTER = -50

@@ -4,6 +4,9 @@ import librosa
 import librosa.display
 import matplotlib.pyplot as plt
 from scipy.ndimage import maximum_filter
+import settings as set
+
+
 
 # -------------- SETTINGS --------------
 page_title = "Upload music"
@@ -18,22 +21,22 @@ audio = st.file_uploader("Upload an audio file", type=["mp3"])
 
 if audio:
     # Audiodatei laden
-    y, sr = librosa.load(audio, sr=None)
+    y, _ = librosa.load(audio, sr=set.SAMPLE_RATE)  # Setzen der Samplingrate auf den festen Wert
 
     # Fourier-Transformation durchführen
     D = librosa.amplitude_to_db(np.abs(librosa.stft(y)), ref=np.max)
 
     # Use maximum filter to highlight peaks in the spectrogram
-    max_filtered = maximum_filter(D, size=(3, 3), mode='constant', cval=-np.inf)
+    max_filtered = maximum_filter(D, size=(set.PEAK_BOX_SIZE, set.PEAK_BOX_SIZE), mode='constant', cval=-np.inf)
 
     # Get indices of peaks
-    peaks_indices = np.argwhere((D == max_filtered) & (D > -80))
+    peaks_indices = np.argwhere((D == max_filtered) & (D > set.MIN_DB_FILTER))
 
     # Zeit-Frequenz-Darstellung erstellen
     fig, ax = plt.subplots(2, 1, figsize=(10, 8))
 
     # Plot the original spectrogram
-    img_original = librosa.display.specshow(D, sr=sr, x_axis='time', y_axis='log', ax=ax[0])
+    img_original = librosa.display.specshow(D, sr=set.SAMPLE_RATE, x_axis='time', y_axis='log', ax=ax[0])
     ax[0].set_title('Original Spectrogram')
     ax[0].set_xlabel('Time')
     ax[0].set_ylabel('Frequency')
