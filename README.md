@@ -3,94 +3,89 @@
 [![Version 1.0][Version_1.0]][Version_1.0-url]
 [![License][License]][License-url]
 
-# Musik Identifizierung
+# Music Identifier
 
-Dieses Endprojekt stellt ein Userinterface mit der Sotware zur Erkennung von Musik dar.
+This programme offers a way for recognising different songs via a user interface.
 
-Diese Software soll kleine Musikausschnitte entgegennehmen und diese mit Musikstücken aus der Datenbank vergleichen. Damit soll der Ausschnitt identifiziert werden.
+This software receives small music excerpts and compares them with songs and music pices from the database. The aim is to identify the excerpt.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ## Beschreibung
 
-Das Endgültige Programm soll folgende Implementierungen beinhalten:
-* Im Web-UI sollen Musikstücke eingelernt werden
-* Im Web-UI sollen Musikstücke identifiziert werden
-* Hochgeladenes Musikstück kann im Browser wiedergegeben werden
+The programme includes the following basic implementations:
+* Music tracks are to be learnt in the web UI
+* Music tracks are to be identified in the web UI
+* Uploaded music tracks can be played in the browser
 
-Erweiterungen:
-* Aufzeichnung über Mikrofon
-* Input über YouTube-Link
-* Link zu identifiziertem Musikstück auf Spotify/Youtube
-* Meta-Daten zu Musikstücken (Interpret, Album, etc.) bestimmen
-* Albumcover des Musikstückes mit DuckDuckGo Such-API bestimmen und anzeigen
-* Bestimmung & Visualisierung der beats-per-minute des Musikstückes
-* History der letzten identifizierten Musikstücke
-* Visualisierung der Datenbank, Fingerprints, Histogramm der Matches, Waveform des Musikstückes plotten, etc.
-* Benchmarking der Anwendung (Dauer des einlernens und identifizierens)
-* Deployment auf Oracle Cloud Free Tier Server
+The programme also includes the following extensions:
+* Link to identified piece of music on Spotify/Youtube
+* Determine metadata for music tracks (artist, album, etc.)
+* Determine and display album cover of the music track with DuckDuckGo search API
+* plotting the waveform of the piece of music
+* Benchmarking of the application (duration of learning and identification)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Erste Schritte
+## First steps
 
-### Abhängigkeiten
+### Dependencies
 
-#### Programmiersprache
+#### Programming language
 
 &emsp;[![Python 3.12.0][Python]][Python-url] 
 
-#### Wichtigste Bibliotheken
+#### Main libraries
 
 &emsp;[![Streamlit][Streamlit]][Streamlit-url]  
 &emsp;[![NumPy][NumPy]][NumPy-url]  
 &emsp;[![pandas][pandas]][pandas-url]
 
-*(für genauere Informationen siehe* [requirements.txt](requirements.txt) *)*
+*(for more details see* [requirements.txt](requirements.txt) *)*
 
-#### Versionsverwaltung
+#### Version control
 
 &emsp;[![Git][Git]][Git-url]  
 &emsp;[![GitHub][GitHub]][GitHub-url]  
 
-#### Betriebssysteme
+#### Operating systems
 
 &emsp;[![Windows 10][Windows_10]][Windows_10-url]
 &emsp;[![Windows 11][Windows_11]][Windows_11-url]
 
-#### Programmierumgebung
+#### Programming environment
 
 &emsp;[![Visual Studio Code][VS_Code]][VS_Code-url]
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Initialisierung
+### Initialisation
 
-Da es sich bei diesem Programm nur um ein Mockup handelt, muss die Entsprechende Programmierumgebung erst herunterlgeladen werden.
-* Herunterladen und Instalieren von [Python 3.12.0](https://www.python.org/downloads/windows/)
-* Herunterladen und Instalieren von [Visual Studio Code](https://code.visualstudio.com)
-* Herunterladen der aktuellen Version des Projekts von [GitHub](https://github.com/CuzImKaviar/music_identifier)
+As this programme is only a mockup, the corresponding programming environment must first be downloaded.
+* Download and install [Python 3.12.0](https://www.python.org/downloads/windows/)
+* Download and install [Visual Studio Code](https://code.visualstudio.com)
+*  Download the current version of the project from [GitHub](https://github.com/CuzImKaviar/music_identifier)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Programm Ausführen
+### Run programme
 
-* Einrichten einer Virtuellen Pythen-Umgebung in VS Code mit  
+* Setting up a virtual Pythen environment in VS Code with  
 ```python -m venv .venv```
-* Aktivieren der Virtuellen Pythen-Umgebung mit  
+* Activate the virtual Pythen environment with  
 ```.venv\Scripts\activate```
-* Instalieren aller benötigten Biblioteken mit  
+* Install all required libraries with  
 ```pip install -r requirements.txt```
-* Ausführen des Programms mit  
+* Execute the programme with  
 ```streamlit run music_identifier.py```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-### Programm Schließen
+### Close programme
 
-* Beenden des Programs durch folgende Tastenkombination    
+* Exit the programme with the following key combination in the terminal    
 ```Strg + C ``` bzw. ```Ctrl + C ```
-* Beenden der virtuelle Pythen-Umgebung mit    
+* Exit the virtual Pythen environment with    
 ```deactivate ```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -111,16 +106,16 @@ Contributors names and contact info
 ## Version History
 
 * v1.0
-    * Funktionalität hinzugefügt
+    * added functionality 
 * v0.1
-    * Setup
-    * Siehe [Commits](github.com/CuzImKaviar/Case_Study/commits/main/) für mehr Details
+    * setup
+    * see [Commits](github.com/CuzImKaviar/Case_Study/commits/main/) for more details
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Lizenz
+## Licence
 
-Dieses Projekt ist lizenziert unter der "Educational Community License, Version 2.0" - siehe [LICENSE.md](LICENSE.md) für mehr Details
+This project is licensed under the "Educational Community License, Version 2.0" license - see [LICENSE.md](LICENSE.md) for more details
 
 [![Educational Community License, Version 2.0][ECL_V2]][ECL_V2-url]
 
