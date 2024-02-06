@@ -43,8 +43,7 @@ if audio:
     plt.colorbar(img_original, format='%+2.0f dB')
 
     # Downsampling the peaks_indices array to reduce the number of points
-    downsample_factor = 3  # adjust this factor as needed
-    downsampled_indices = peaks_indices[::downsample_factor]
+    downsampled_indices = peaks_indices[::set.DOWNSAMPLE_FACTOR]
 
     # Create a constellation map with downsampled points
     ax[1].scatter(downsampled_indices[:, 1], downsampled_indices[:, 0], c='r', marker='o', s=5)
