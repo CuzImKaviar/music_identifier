@@ -4,7 +4,7 @@
 SAMPLE_RATE = 44100
 
 #MIN DB FILTER
-MIN_DB_FILTER = -40
+MIN_DB_FILTER = -35
 
 # Größe des Peak-Box-Filters
 PEAK_BOX_SIZE = 20

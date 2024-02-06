@@ -45,11 +45,32 @@ if audio:
     # Downsampling the peaks_indices array to reduce the number of points
     downsampled_indices = peaks_indices[::set.DOWNSAMPLE_FACTOR]
 
-    # Create a constellation map with downsampled points
+    #constellation map with downsampled points
     ax[1].scatter(downsampled_indices[:, 1], downsampled_indices[:, 0], c='r', marker='o', s=5)
     ax[1].set_title('Constellation Map (Downsampled)')
     ax[1].set_xlabel('Time')
     ax[1].set_ylabel('Frequency')
 
+
+    hashmap = {}
+    # Iterate over downsampled_indices and calculate the hashes
+    for idx, (time, freq) in enumerate(downsampled_indices):
+        # Check if the next pair exists
+        if idx + 1 < len(downsampled_indices):
+            # Calculate the time difference between the current and next points
+            delta_T = downsampled_indices[idx + 1][0] - time
+            # Calculate the hash value for the current pair
+            hash_value = int(str(freq) + str(downsampled_indices[idx + 1][1]) + str(delta_T))
+            # Store the hash value and its corresponding information in the hashmap
+            hashmap[hash_value] = {
+                'freq_A': freq,
+                'freq_B': downsampled_indices[idx + 1][1],
+                'delta_T': delta_T,
+                'time': time
+            }
+
+    # Beispiel für den Zugriff auf einen Eintrag in der Hashmap
+    #hash_entry = hashmap[list(hashmap.keys())[0]]  # Hier 0 ist der Hash-Wert, den Sie verwenden möchten
+    #print("Informationen für Hash-Wert 0:", hash_entry)
 
     st.pyplot(fig)
