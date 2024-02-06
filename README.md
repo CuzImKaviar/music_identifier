@@ -107,10 +107,10 @@ Contributors names and contact info
 ## Version History
 
 * v1.0
-    * added functionality 
+    * added functionality
+    * see [Commits](github.com/CuzImKaviar/Case_Study/commits/main/) for more details
 * v0.1
     * setup
-    * see [Commits](github.com/CuzImKaviar/Case_Study/commits/main/) for more details
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
