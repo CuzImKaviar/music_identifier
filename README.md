@@ -113,6 +113,14 @@ Contributors names and contact info
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
+## Code of Conduct
+
+This project runs under the "Contributor Covenant, Version 2.1" code of conduct - see [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md) for more details
+
+[![Contributor Covenant Code of Conduct, Version 2.1][CC_V2]][CC_V2-url]
+
+<p align="right">(<a href="#readme-top">back to top</a>)</p>
+
 ## Licence
 
 This project is licensed under the "Educational Community License, Version 2.0" license - see [LICENSE.md](LICENSE.md) for more details
@@ -133,7 +141,7 @@ Inspiration, code snippets, etc.
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 [Version_1.0]: https://img.shields.io/badge/version-v1.0-blue
-[Version_1.0-url]: https://github.com/CuzImKaviar/Case_Study/commits/main/
+[Version_1.0-url]: https://github.com/CuzImKaviar/music_identifier/commits/main/
 [License]: https://img.shields.io/badge/license-Educational%20Community%20License,%20Version%202.0-3DA639
 [License-url]: https://opensource.org/license/ecl-2-0/
 [Python]: https://img.shields.io/badge/python_3.12.0-FFD43B?style=for-the-badge&logo=python&logoColor=306998
@@ -154,5 +162,7 @@ Inspiration, code snippets, etc.
 [Windows_11-url]: https://www.microsoft.com/de-de/software-download/windows11
 [VS_Code]: https://img.shields.io/badge/Visual%20Studio%20Code-444444?style=for-the-badge&logo=visualstudiocode&logoColor=007ACC
 [VS_Code-url]: https://code.visualstudio.com
+[CC_V2]: https://img.shields.io/badge/Contributor%20Covenant-5E0D73?style=for-the-badge&logo=data:image/svg%2bxml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+Cjx0aXRsZT5Db250cmlidXRvciBDb3ZlbmFudCBMb2dvPC90aXRsZT4KPGcgaWQ9IkNhbnZhcyI+CjxnIGlkPSJHcm91cCI+CjxnIGlkPSJTdWJ0cmFjdCI+Cjx1c2UgeGxpbms6aHJlZj0iI3BhdGgwX2ZpbGwiIGZpbGw9IiNGRkZGRkYiLz4KPC9nPgo8ZyBpZD0iU3VidHJhY3QiPgo8dXNlIHhsaW5rOmhyZWY9IiNwYXRoMV9maWxsIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg1OCAyNCkiIGZpbGw9IiNGRkZGRkYiLz4KPC9nPgo8L2c+CjwvZz4KPGRlZnM+CjxwYXRoIGlkPSJwYXRoMF9maWxsIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik0gMTgyLjc4NyAxMi4yODQ2QyAxNzMuMDA1IDkuNDk0MDggMTYyLjY3NyA4IDE1MiA4QyA5MC4xNDQxIDggNDAgNTguMTQ0MSA0MCAxMjBDIDQwIDE4MS44NTYgOTAuMTQ0MSAyMzIgMTUyIDIzMkMgMTg4LjQ2NCAyMzIgMjIwLjg1NyAyMTQuNTc1IDI0MS4zMDggMTg3LjU5OEMgMjE5Ljg3IDIyOC4yNzIgMTc3LjE3MyAyNTYgMTI4IDI1NkMgNTcuMzA3NSAyNTYgMCAxOTguNjkyIDAgMTI4QyAwIDU3LjMwNzUgNTcuMzA3NSAwIDEyOCAwQyAxNDcuNjA0IDAgMTY2LjE3OSA0LjQwNzA5IDE4Mi43ODcgMTIuMjg0NloiLz4KPHBhdGggaWQ9InBhdGgxX2ZpbGwiIGZpbGwtcnVsZT0iZXZlbm9kZCIgZD0iTSAxMzcuMDkgOS4yMTM0MkMgMTI5Ljc1NCA3LjEyMDU2IDEyMi4wMDggNiAxMTQgNkMgNjcuNjA4MSA2IDMwIDQzLjYwODEgMzAgOTBDIDMwIDEzNi4zOTIgNjcuNjA4MSAxNzQgMTE0IDE3NEMgMTQxLjM0OCAxNzQgMTY1LjY0MyAxNjAuOTMxIDE4MC45ODEgMTQwLjY5OEMgMTY0LjkwMyAxNzEuMjA0IDEzMi44OCAxOTIgOTYgMTkyQyA0Mi45ODA3IDE5MiAwIDE0OS4wMTkgMCA5NkMgMCA0Mi45ODA3IDQyLjk4MDcgMCA5NiAwQyAxMTAuNzAzIDAgMTI0LjYzNCAzLjMwNTMxIDEzNy4wOSA5LjIxMzQyWiIvPgo8L2RlZnM+Cjwvc3ZnPgoK&logoColor=FFFFFF
+[CC_V2-url]: https://www.contributor-covenant.org/version/2/1/code_of_conduct/
 [ECL_V2]: https://img.shields.io/badge/Educational%20Community%20License,%20Version%202.0-414042?style=for-the-badge&logo=opensourceinitiative&logoColor=3DA639
 [ECL_V2-url]: https://opensource.org/license/ecl-2-0/
