@@ -12,7 +12,7 @@ This software receives small music excerpts and compares them with songs and mus
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Beschreibung
+## Description
 
 The programme includes the following basic implementations:
 * Music tracks are to be learnt in the web UI
