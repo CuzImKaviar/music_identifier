@@ -130,7 +130,7 @@ This project is licensed under the "Educational Community License, Version 2.0" 
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
-## Referenzen
+## Acknowledgments
 
 Inspiration, code snippets, etc.
 * [A simple README.md template](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
