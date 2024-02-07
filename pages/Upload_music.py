@@ -8,6 +8,7 @@ import settings as set
 
 
 
+
 # -------------- SETTINGS --------------
 page_title = "Upload music"
 page_icon = ":microphone:"  # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
@@ -16,10 +17,13 @@ layout = "centered"
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
 
-# Datei hochladen
-audio = st.file_uploader("Upload an audio file", type=["mp3"])
+with st.form("entry_form", clear_on_submit=True):
+    # Datei hochladen
+    name_of_Song = st.text_input("Name des Songs", max_chars=64, placeholder="Name hier einfügen ...", key="Name")
+    audio = st.file_uploader("Upload an audio file", type=["mp3"])
+    submitted = st.form_submit_button("Neuen Song speichern")
 
-if audio:
+if audio and submitted:
     # Audiodatei laden
     y, _ = librosa.load(audio, sr=set.SAMPLE_RATE)  # Setzen der Samplingrate auf den festen Wert
 
@@ -68,6 +72,8 @@ if audio:
                 'delta_T': delta_T,
                 'time': time
             }
+
+
 
     # Beispiel für den Zugriff auf einen Eintrag in der Hashmap
     #hash_entry = hashmap[list(hashmap.keys())[0]]  # Hier 0 ist der Hash-Wert, den Sie verwenden möchten
