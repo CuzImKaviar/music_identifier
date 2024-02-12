@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import maximum_filter
 import settings as set
 from audio_process import process_audio 
+from audio_process import create_hashes
 
 
 # -------------- SETTINGS --------------
@@ -23,7 +24,8 @@ with st.form("entry_form", clear_on_submit=True):
     submitted = st.form_submit_button("Neuen Song speichern")
 
 if audio and submitted:
-    fig, hashmap = process_audio(audio)
+    fig, indices = process_audio(audio)
+    hashmap = create_hashes(indices,set.TARGET_T,set.TARGET_F,set.TARGET_START_DELAY)
     st.pyplot(fig)
 
 

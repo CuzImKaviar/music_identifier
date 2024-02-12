@@ -30,29 +30,25 @@ def process_audio(audio_file):
     plt.colorbar(img_original, format='%+2.0f dB')
 
     # Downsampling the peaks_indices array to reduce the number of points
-    downsampled_indices = peaks_indices[::set.DOWNSAMPLE_FACTOR]
+    
 
     # Constellation map with downsampled points
-    ax[1].scatter(downsampled_indices[:, 1], downsampled_indices[:, 0], c='r', marker='o', s=5)
+    ax[1].scatter(peaks_indices[:, 1], peaks_indices[:, 0], c='r', marker='o', s=5)
     ax[1].set_title('Constellation Map (Downsampled)')
     ax[1].set_xlabel('Time')
     ax[1].set_ylabel('Frequency')
 
-    hashmap = {}
-    # Iterate over downsampled_indices and calculate the hashes
-    for idx, (time, freq) in enumerate(downsampled_indices):
-        # Check if the next pair exists
-        if idx + 1 < len(downsampled_indices):
-            # Calculate the time difference between the current and next points
-            delta_T = downsampled_indices[idx + 1][0] - time
-            # Calculate the hash value for the current pair
-            hash_value = int(str(freq) + str(downsampled_indices[idx + 1][1]) + str(delta_T))
-            # Store the hash value and its corresponding information in the hashmap
-            hashmap[hash_value] = {
-                'freq_A': freq,
-                'freq_B': downsampled_indices[idx + 1][1],
-                'delta_T': delta_T,
-                'time': time
-            }
+    return fig, peaks_indices
 
-    return fig, hashmap
+def create_hashes(peaks_indices, time_resolution, frequency_resolution, delay):
+    hashes = []
+    for i, anchor_point in enumerate(peaks_indices):
+        for j, target_point in enumerate(peaks_indices[i + 1:], start=i+1):
+            # Prüfen, ob der Ziel-Punkt innerhalb der Zeit- und Frequenzauflösung um den Ankerpunkt liegt
+            if (target_point[0] - anchor_point[0]) >= delay and abs(target_point[0] - anchor_point[0] - delay) <= time_resolution and abs(target_point[1] - anchor_point[1]) <= frequency_resolution:
+
+                # Hash-Tupel erstellen: (freq_A, freq_B, zeit_delta)
+                hash_tuple = (anchor_point[1], target_point[1], target_point[0] - anchor_point[0])
+                # Das Hash-Tupel der Liste der Hashes hinzufügen
+                hashes.append(hash_tuple)
+    return hashes

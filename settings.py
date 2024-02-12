@@ -7,25 +7,12 @@ SAMPLE_RATE = 44100
 MIN_DB_FILTER = -35
 
 # Größe des Peak-Box-Filters
-PEAK_BOX_SIZE = 20
-
-#downsample Factor
-DOWNSAMPLE_FACTOR = 3
-
-"""
-# Größe des FFT-Fensters
-FFT_WINDOW_SIZE = 0.025  # 25 ms
-
-# Punkt-Effizienz für die Berechnung der Ziel-Peaks
-POINT_EFFICIENCY = 0.5
-
-# Zeit für den Beginn der Zielzone
-TARGET_START = 1.0
-
-# Breite der Zielzone in Sekunden
-TARGET_T = 5.0
+PEAK_BOX_SIZE = 30 #25
 
 # Höhe der Zielzone in Hz
-TARGET_F = 5000
+TARGET_F = float(4000)
 
-"""
+TARGET_T = float(1.8)
+
+TARGET_START_DELAY = float(0.05)
+# How many seconds after an anchor point to start the target zone for pairing.
