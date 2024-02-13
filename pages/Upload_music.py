@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import maximum_filter
 import settings as set
 from audio_process import process_audio 
-from audio_process import create_hashes
+from audio_process import create_hashes_v1
 from songs import Song
 
 
@@ -26,9 +26,16 @@ with st.form("entry_form", clear_on_submit=True):
 
 if audio and submitted:
     fig, indices = process_audio(audio)
-    hashmap = create_hashes(indices,set.TARGET_T,set.TARGET_F,set.TARGET_START_DELAY,name_of_Song)
+    hashmap = create_hashes_v1(indices) 
     st.pyplot(fig)
-    print(hashmap)#Work in progress
-    song = Song(name_of_Song,1)
+    #print(hashmap)
+    
+    converted_hashes = []
+    for hash_tuple in hashmap:
+        converted_tuple = tuple(int(value) for value in hash_tuple)
+        converted_hashes.append(converted_tuple)
+
+
+    song = Song(name_of_Song,converted_hashes)
     song.store()
 

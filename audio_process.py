@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import maximum_filter
 import settings as set
 
+
 def process_audio(audio_file):
     # Audiodatei laden
     y, _ = librosa.load(audio_file, sr=set.SAMPLE_RATE)  # Setzen der Samplingrate auf den festen Wert
@@ -29,7 +30,7 @@ def process_audio(audio_file):
     ax[0].set_ylabel('Frequency')
     plt.colorbar(img_original, format='%+2.0f dB')
 
-    # Downsampling the peaks_indices array to reduce the number of points
+ 
     
 
     # Constellation map with downsampled points
@@ -40,16 +41,19 @@ def process_audio(audio_file):
 
     return fig, peaks_indices
 
-def create_hashes(peaks_indices, time_resolution, frequency_resolution, delay, track_id):
+def create_hashes_v1(peaks_indices):
+    time_resolution = set.TARGET_T
+    frequency_resolution = set.TARGET_F
+    delay = set.TARGET_START_DELAY
+
     hashes = []
     for i, anchor_point in enumerate(peaks_indices):
         for j, target_point in enumerate(peaks_indices[i + 1:], start=i+1):
             # Prüfen, ob der Ziel-Punkt innerhalb der Zeit- und Frequenzauflösung um den Ankerpunkt liegt
             if (target_point[0] - anchor_point[0]) >= delay and abs(target_point[0] - anchor_point[0] - delay) <= time_resolution and abs(target_point[1] - anchor_point[1]) <= frequency_resolution:
-                # Hash-Tupel erstellen: (freq_A, freq_B, zeit_delta, Point A time, track_id)
-                hash_tuple = (anchor_point[1], target_point[1], target_point[0] - anchor_point[0], anchor_point[0], track_id)
+                # Hash-Tupel erstellen: (freq_A, freq_B, zeit_delta, Point A time)
+                #print(target_point[0] - anchor_point[0])
+                hash_tuple = (anchor_point[1], target_point[1], target_point[0] - anchor_point[0], anchor_point[0])
                 # Das Hash-Tupel der Liste der Hashes hinzufügen
                 hashes.append(hash_tuple)
     return hashes
-
-
