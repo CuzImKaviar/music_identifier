@@ -40,15 +40,16 @@ def process_audio(audio_file):
 
     return fig, peaks_indices
 
-def create_hashes(peaks_indices, time_resolution, frequency_resolution, delay):
+def create_hashes(peaks_indices, time_resolution, frequency_resolution, delay, track_id):
     hashes = []
     for i, anchor_point in enumerate(peaks_indices):
         for j, target_point in enumerate(peaks_indices[i + 1:], start=i+1):
             # Prüfen, ob der Ziel-Punkt innerhalb der Zeit- und Frequenzauflösung um den Ankerpunkt liegt
             if (target_point[0] - anchor_point[0]) >= delay and abs(target_point[0] - anchor_point[0] - delay) <= time_resolution and abs(target_point[1] - anchor_point[1]) <= frequency_resolution:
-
-                # Hash-Tupel erstellen: (freq_A, freq_B, zeit_delta)
-                hash_tuple = (anchor_point[1], target_point[1], target_point[0] - anchor_point[0])
+                # Hash-Tupel erstellen: (freq_A, freq_B, zeit_delta, Point A time, track_id)
+                hash_tuple = (anchor_point[1], target_point[1], target_point[0] - anchor_point[0], anchor_point[0], track_id)
                 # Das Hash-Tupel der Liste der Hashes hinzufügen
                 hashes.append(hash_tuple)
     return hashes
+
+

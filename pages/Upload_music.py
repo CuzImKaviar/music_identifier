@@ -25,7 +25,7 @@ with st.form("entry_form", clear_on_submit=True):
 
 if audio and submitted:
     fig, indices = process_audio(audio)
-    hashmap = create_hashes(indices,set.TARGET_T,set.TARGET_F,set.TARGET_START_DELAY)
+    hashmap = create_hashes(indices,set.TARGET_T,set.TARGET_F,set.TARGET_START_DELAY,name_of_Song)
+    
     st.pyplot(fig)
-
 
