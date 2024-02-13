@@ -28,7 +28,7 @@ if audio and submitted:
     fig, indices = process_audio(audio)
     hashmap = create_hashes(indices,set.TARGET_T,set.TARGET_F,set.TARGET_START_DELAY,name_of_Song)
     st.pyplot(fig)
-    print(hashmap)
+    print(hashmap)#Work in progress
     song = Song(name_of_Song,1)
     song.store()
 
