@@ -10,7 +10,7 @@ class Song(Serializable):
     
     @classmethod
     def get_all_names(cls):
-        return [song['name'] for song in Song.get_db_connector(Song)]
+        return [song['title'] for song in Song.get_db_connector(Song)]
 
     @classmethod
     def get_all_ids(cls):
