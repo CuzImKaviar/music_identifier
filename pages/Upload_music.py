@@ -7,6 +7,7 @@ from scipy.ndimage import maximum_filter
 import settings as set
 from audio_process import process_audio 
 from audio_process import create_hashes
+from songs import Song
 
 
 # -------------- SETTINGS --------------
@@ -26,6 +27,8 @@ with st.form("entry_form", clear_on_submit=True):
 if audio and submitted:
     fig, indices = process_audio(audio)
     hashmap = create_hashes(indices,set.TARGET_T,set.TARGET_F,set.TARGET_START_DELAY,name_of_Song)
-    
     st.pyplot(fig)
+    print(hashmap)
+    song = Song(name_of_Song,1)
+    song.store()
 
