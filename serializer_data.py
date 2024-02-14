@@ -40,7 +40,3 @@ class Serializable(ABC):
 
         conn.commit()
         conn.close()
-
-    @abstractmethod
-    def to_dict(self):
-        pass
