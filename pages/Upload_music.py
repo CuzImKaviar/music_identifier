@@ -25,8 +25,8 @@ with st.form("entry_form", clear_on_submit=True):
     submitted = st.form_submit_button("Neuen Song speichern")
 
 if audio and submitted:
-    fig, indices = process_audio(audio)
-    hashmap = create_hashes_v1(indices) 
+    fig, indices, times = process_audio(audio)
+    hashmap = create_hashes_v1(indices, times) 
     st.pyplot(fig)
     #print(hashmap)
     
