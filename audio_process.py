@@ -7,21 +7,22 @@ from scipy.ndimage import maximum_filter
 import settings as set
 
 
+
 def process_audio(audio_file):
     # Audiodatei laden
     y, _ = librosa.load(audio_file, sr=set.SAMPLE_RATE)  # Setzen der Samplingrate auf den festen Wert
 
     # Fourier-Transformation durchführen
-    D = librosa.amplitude_to_db(np.abs(librosa.stft(y)), ref=np.max)
+    D = librosa.amplitude_to_db(np.abs(librosa.stft(y, n_fft=set.FFT_WINDOW_SIZE)), ref=np.max)
 
     # Use maximum filter to highlight peaks in the spectrogram
-    max_filtered = maximum_filter(D, size=(set.PEAK_BOX_SIZE, set.PEAK_BOX_SIZE), mode='constant', cval=-np.inf)
+    max_filtered = maximum_filter(D, size=(set.PEAK_BOX_SIZE, set.PEAK_BOX_SIZE+5), mode='constant', cval=-np.inf)
 
     # Get indices of peaks
     peaks_indices = np.argwhere((D == max_filtered) & (D > set.MIN_DB_FILTER))
 
     # Zeit-Frequenz-Darstellung erstellen
-    fig, ax = plt.subplots(2, 1, figsize=(10, 8))
+    fig, ax = plt.subplots(3, 1, figsize=(10, 12))
 
     # Plot the original spectrogram
     img_original = librosa.display.specshow(D, sr=set.SAMPLE_RATE, x_axis='time', y_axis='log', ax=ax[0])
@@ -30,16 +31,21 @@ def process_audio(audio_file):
     ax[0].set_ylabel('Frequency')
     plt.colorbar(img_original, format='%+2.0f dB')
 
- 
-    
-
-    # Constellation map with downsampled points
-    ax[1].scatter(peaks_indices[:, 1], peaks_indices[:, 0], c='r', marker='o', s=5)
-    ax[1].set_title('Constellation Map (Downsampled)')
+    # Plot the filtered spectrogram to highlight peaks
+    img_filtered = librosa.display.specshow(max_filtered, sr=set.SAMPLE_RATE, x_axis='time', y_axis='log', ax=ax[1])
+    ax[1].set_title('Filtered Spectrogram (Peaks Highlighted)')
     ax[1].set_xlabel('Time')
     ax[1].set_ylabel('Frequency')
+    plt.colorbar(img_filtered, ax=ax[1], format='%+2.0f dB')
+
+    # Constellation map with downsampled points
+    ax[2].scatter(peaks_indices[:, 1], peaks_indices[:, 0], c='r', marker='o', s=5)
+    ax[2].set_title('Constellation Map (Downsampled)')
+    ax[2].set_xlabel('Time')
+    ax[2].set_ylabel('Frequency')
 
     return fig, peaks_indices
+
 
 def create_hashes_v1(peaks_indices):
     time_resolution = set.TARGET_T
@@ -52,7 +58,8 @@ def create_hashes_v1(peaks_indices):
             # Prüfen, ob der Ziel-Punkt innerhalb der Zeit- und Frequenzauflösung um den Ankerpunkt liegt
             if (target_point[0] - anchor_point[0]) >= delay and abs(target_point[0] - anchor_point[0] - delay) <= time_resolution and abs(target_point[1] - anchor_point[1]) <= frequency_resolution:
                 # Hash-Tupel erstellen: (freq_A, freq_B, zeit_delta, Point A time)
-                #print(target_point[0] - anchor_point[0])
+                print(target_point[0])
+                print(anchor_point[0])
                 hash_tuple = (anchor_point[1], target_point[1], target_point[0] - anchor_point[0], anchor_point[0])
                 # Das Hash-Tupel der Liste der Hashes hinzufügen
                 hashes.append(hash_tuple)
