@@ -1,5 +1,26 @@
 import sqlite3
 
+import numpy as np
+import librosa
+import librosa.display
+import matplotlib.pyplot as plt
+from scipy.ndimage import maximum_filter
+import settings as set
+from audio_process import process_audio 
+from audio_process import create_hashes_v1
+from song import Song
+
+audio = "C:\\Users\\sebba\\Downloads\\audio.mp3"
+song_name = "song1"
+song_artist = "artist1"
+
+fig, indices, times = process_audio(audio)
+hashmap = create_hashes_v1(indices, times)
+
+song = Song(song_name, song_artist, hashmap)
+song.save()
+
+'''
 name_of_Song = "song1"
 name_of_Artist = "artist1"
 
@@ -16,7 +37,7 @@ con.commit()
 
 con.close()
 
-'''
+
 def initialize_database():
     # Connect to the database
     con = sqlite3.connect('database.db')
