@@ -33,7 +33,6 @@ class Serializable(ABC):
             obj_dict.pop('cursor', None)
             obj_dict.pop('db', None)
             values = [obj_dict.get(column) for column in columns]
-            print(f"values: {values}")  #debug
             placeholders = ', '.join(['?' for _ in columns])
             self.cursor.execute(f"INSERT INTO {table_name} VALUES ({placeholders})", tuple(values))
             self.connection.commit()
@@ -41,7 +40,6 @@ class Serializable(ABC):
             self.create_table(table_name, columns)
             obj_dict = obj.__dict__.copy()
             values = [obj_dict.get(column) for column in columns]
-            print(f"values: {values}")  #debug
             placeholders = ', '.join(['?' for _ in columns])
             self.cursor.execute(f"INSERT INTO {table_name} VALUES ({placeholders})", tuple(values))
             self.connection.commit()
