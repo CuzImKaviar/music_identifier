@@ -21,6 +21,8 @@ class Song(Serializable):
         table_name = f"{self.title}_{self.artist}"
         for hash in self.hashmap:
             self.serialize(table_name, ["anchor_point", "target_point", "delta_time", "time"], hash)
+        
+        Serializable().close()
 
 
     def __str__(self):
