@@ -1,25 +1,55 @@
 import sqlite3
+from serializer import Serializable
 
-class DatabaseClient:
+class DatabaseClient(Serializable):
     """
-    Database client connection + Functionen um sachen zu inserten, updaten, deleten
+    Database client connection + functiions to insert, update, delete and extract data
     """
     # Turns the class into a naive singleton
     # --> not thread safe and doesn't handle inheritance particularly well
-    __instance = None
-    def __new__(cls):
-        if cls.__instance is None:
-            cls.__instance = super().__new__(cls)
-            cls.__instance.path = sqlite3.connect('database.db')
-
-        return cls.__instance
+    _instance = None
+    def __new__(cls, *args, **kwargs):
+        if cls._instance is None:
+            cls._instance = super().__new__(cls)
+            cls._instance._initialized = False
+        return cls._instance
     
-    def get_songs_table(self) -> Table:
-        return TinyDB(self.__instance.path, storage=serializer).table('songs')
+    def __init__(self, db_name='database.db'):
+        if self._initialized:
+            return
+        super().__init__(db_name)
+        self._initialized = True
+
+    def insert_data(self, obj, table_name, columns):
+        """
+        Insert data into the database.
+        """
+        self.serialize(obj, table_name, columns)
     
-serializer = SerializationMiddleware(JSONStorage)
+    def update_data(self, obj, table_name, columns, condition):
+        """
+        Update data in the database based on a condition.
+        """
+        serialized_obj = pickle.dumps(obj)
+        update_query = f"UPDATE {table_name} SET serialized_data = ? WHERE {condition}"
+        self.cursor.execute(update_query, (serialized_obj,))
+        self.connection.commit()
+    
+    def delete_data(self, table_name, condition):
+        """
+        Delete data from the database based on a condition.
+        """
+        delete_query = f"DELETE FROM {table_name} WHERE {condition}"
+        self.cursor.execute(delete_query)
+        self.connection.commit()
+    
+    def extract_data(self, table_name):
+        """
+        Extract data from the specified table.
+        """
+        return self.deserialize(table_name, [])
 
-
+'''
 def initialize_database():
     # Connect to the database
     con = sqlite3.connect('database.db')
@@ -42,3 +72,4 @@ def initialize_database():
 
 if __name__ == "__main__":
     initialize_database()
+'''
