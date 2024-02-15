@@ -1,21 +1,26 @@
 import sqlite3
 from database import DatabaseClient
 from serializer import Serializable
+from HashTuple import HashTuple
 
 
 class Song(Serializable):
     
-    def __init__(self, title, artist, hashes):
+    def __init__(self, title, artist, hashmap):
+        super().__init__()
         self.title = title
         self.artist = artist
-        self.hashes = hashes
+        self.hashmap = [HashTuple(*hash) for hash in hashmap]
+        self.db = DatabaseClient()
     
     def save(self):
         """
         Save the song to the database.
         """
-        db = DatabaseClient()
-        db.insert(self, "songs", ["title", "artist"])
+        self.serialize("songs", ["title", "artist"])
+        table_name = f"{self.title}_{self.artist}"
+        for hash in self.hashmap:
+            self.serialize(table_name, ["anchor_point", "target_point", "delta_time", "time"])
 
 
     def __str__(self):
@@ -27,7 +32,9 @@ class Song(Serializable):
 
 
 if __name__ == "__main__":
-    song = Song("song1", "artist1", "hashes1")
-    song.serialize(song, "songs", ["title", "artist", "hashes"])
-    song.save()
-    
+    hashmap = [(1, 2, 3, 4), (5, 6, 7, 8)]
+    song1 = Song("gzu222z", "182227", hashmap)
+    #print(song1.__dict__)
+    song1.save()
+
+    Serializable().close()

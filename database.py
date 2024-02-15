@@ -21,11 +21,11 @@ class DatabaseClient(Serializable):
         super().__init__(db_name)
         self._initialized = True
 
-    def insert(self, obj, table_name, columns):
-        """
-        Insert data into the database.
-        """
-        self.serialize(obj, table_name, columns)
+    #def insert(self, table_name, columns):
+    #    """
+    #    Insert data into the database.
+    #    """
+    #    self.serialize(table_name, columns)
     
     def update(self, obj, table_name, columns, condition):
         """
