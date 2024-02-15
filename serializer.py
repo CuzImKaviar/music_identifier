@@ -20,21 +20,32 @@ class Serializable(ABC):
         self.cursor.execute(create_table_query)
         self.connection.commit()
     
-    def serialize(self, table_name, columns):
+    def serialize(self, table_name, columns, obj=None):
         """
         Serialize an object and insert it into the database.
         """
-        self.create_table(table_name, columns)
-        obj_dict = self.__dict__.copy()
-        obj_dict.pop('db_name', None)
-        obj_dict.pop('connection', None)
-        obj_dict.pop('cursor', None)
-        obj_dict.pop('db', None)
-        values = [obj_dict.get(column) for column in columns]
-        print(f"values: {values}")  #debug
-        placeholders = ', '.join(['?' for _ in columns])
-        self.cursor.execute(f"INSERT INTO {table_name} VALUES ({placeholders})", tuple(values))
-        self.connection.commit()
+        if obj is None:
+            obj = self
+            self.create_table(table_name, columns)
+            obj_dict = self.__dict__.copy()
+            obj_dict.pop('db_name', None)
+            obj_dict.pop('connection', None)
+            obj_dict.pop('cursor', None)
+            obj_dict.pop('db', None)
+            values = [obj_dict.get(column) for column in columns]
+            print(f"values: {values}")  #debug
+            placeholders = ', '.join(['?' for _ in columns])
+            self.cursor.execute(f"INSERT INTO {table_name} VALUES ({placeholders})", tuple(values))
+            self.connection.commit()
+        else:
+            self.create_table(table_name, columns)
+            obj_dict = obj.__dict__.copy()
+            values = [obj_dict.get(column) for column in columns]
+            print(f"values: {values}")  #debug
+            placeholders = ', '.join(['?' for _ in columns])
+            self.cursor.execute(f"INSERT INTO {table_name} VALUES ({placeholders})", tuple(values))
+            self.connection.commit()
+
 
     def deserialize(self, table_name, columns):
         """

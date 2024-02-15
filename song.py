@@ -20,7 +20,7 @@ class Song(Serializable):
         self.serialize("songs", ["title", "artist"])
         table_name = f"{self.title}_{self.artist}"
         for hash in self.hashmap:
-            self.serialize(table_name, ["anchor_point", "target_point", "delta_time", "time"])
+            self.serialize(table_name, ["anchor_point", "target_point", "delta_time", "time"], hash)
 
 
     def __str__(self):
@@ -34,7 +34,7 @@ class Song(Serializable):
 if __name__ == "__main__":
     hashmap = [(1, 2, 3, 4), (5, 6, 7, 8)]
     song1 = Song("gzu222z", "182227", hashmap)
-    #print(song1.__dict__)
+    print(song1.__dict__)
     song1.save()
 
-    Serializable().close()
+    #Serializable().close()
