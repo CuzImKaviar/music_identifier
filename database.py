@@ -1,4 +1,5 @@
 import sqlite3
+import pickle
 from serializer import Serializable
 
 class DatabaseClient(Serializable):
@@ -20,13 +21,13 @@ class DatabaseClient(Serializable):
         super().__init__(db_name)
         self._initialized = True
 
-    def insert_data(self, obj, table_name, columns):
+    def insert(self, obj, table_name, columns):
         """
         Insert data into the database.
         """
         self.serialize(obj, table_name, columns)
     
-    def update_data(self, obj, table_name, columns, condition):
+    def update(self, obj, table_name, columns, condition):
         """
         Update data in the database based on a condition.
         """
@@ -35,7 +36,7 @@ class DatabaseClient(Serializable):
         self.cursor.execute(update_query, (serialized_obj,))
         self.connection.commit()
     
-    def delete_data(self, table_name, condition):
+    def delete(self, table_name, condition):
         """
         Delete data from the database based on a condition.
         """
@@ -43,33 +44,8 @@ class DatabaseClient(Serializable):
         self.cursor.execute(delete_query)
         self.connection.commit()
     
-    def extract_data(self, table_name):
+    def extract(self, table_name):
         """
         Extract data from the specified table.
         """
         return self.deserialize(table_name, [])
-
-'''
-def initialize_database():
-    # Connect to the database
-    con = sqlite3.connect('database.db')
-
-    # Create a cursor
-    cursor = con.cursor()
-
-    # Create a table
-    cursor.execute("""CREATE TABLE IF NOT EXISTS songs(
-    name text,
-    artist text
-    )""")
-
-
-    # Commit the databse
-    con.commit()
-
-    # Close the connection
-    con.close()
-
-if __name__ == "__main__":
-    initialize_database()
-'''

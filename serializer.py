@@ -12,18 +12,27 @@ class Serializable(ABC):
         self.cursor = self.connection.cursor()
 
     def create_table(self, table_name, columns):
+        """
+        Create a table in the database.
+        """
         column_definitions = ', '.join([f"{column} TEXT" for column in columns])
         create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} ({column_definitions})"
         self.cursor.execute(create_table_query)
         self.connection.commit()
     
     def serialize(self, obj, table_name, columns):
+        """
+        Serialize an object and insert it into the database.
+        """
         self.create_table(table_name, columns)
         serialized_obj = pickle.dumps(obj)
         self.cursor.execute(f"INSERT INTO {table_name} VALUES (?)", (serialized_obj,))
         self.connection.commit()
 
     def deserialize(self, table_name, columns):
+        """
+        Deserialize an object from the database.
+        """
         self.create_table(table_name, columns)
         self.cursor.execute(f"SELECT * FROM {table_name}")
         rows = self.cursor.fetchall()
@@ -33,4 +42,7 @@ class Serializable(ABC):
         return deserialized_objs
 
     def close(self):
+        """
+        Close the database connection.
+        """
         self.connection.close()
