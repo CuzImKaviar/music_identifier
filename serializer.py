@@ -80,3 +80,14 @@ class Serializable(ABC):
         Close the database connection.
         """
         self.connection.close()
+
+    def count_matching_hashes(self, table_name, song_data):
+        """
+        Count the number of matching hashes in the given table.
+        """
+        song_data = [(anchor_point, target_point) for anchor_point, target_point, _, _ in song_data]
+        flat_song_data = [item for sublist in song_data for item in sublist]
+        placeholders = ', '.join(['(?, ?)' for _ in song_data])
+        query = f"SELECT COUNT(*) FROM {table_name} WHERE (anchor_point, target_point) IN ({placeholders})"
+        self.cursor.execute(query, flat_song_data)
+        return self.cursor.fetchone()[0]
