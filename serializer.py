@@ -39,8 +39,7 @@ class Serializable(ABC):
         else:
             self.create_table(table_name, columns)
             placeholders = ', '.join(['?' for _ in columns])
-            for data in obj:
-                self.cursor.execute(f"INSERT INTO {table_name} VALUES ({placeholders})", data)
+            self.cursor.executemany(f"INSERT INTO {table_name} VALUES ({placeholders})", obj)
             self.connection.commit()
 
 
