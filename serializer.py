@@ -20,6 +20,22 @@ class Serializable(ABC):
         self.cursor.execute(create_table_query)
         self.connection.commit()
     
+    def remove_table(self, table_name):
+        """
+        Remove a table from the database.
+        """
+        remove_table_query = f"DROP TABLE IF EXISTS {table_name}"
+        self.cursor.execute(remove_table_query)
+        self.connection.commit()
+
+    def delete_entry(self, table_name, column, value):
+        """
+        Delete an object from the database.
+        """
+        delete_query = f"DELETE FROM {table_name} WHERE {column} = ?"
+        self.cursor.execute(delete_query, (value,))
+        self.connection.commit()
+    
     def serialize(self, table_name, columns, a_list=None):
         """
         Serialize an object and insert it into the database.

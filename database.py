@@ -36,13 +36,13 @@ class DatabaseClient(Serializable):
         self.cursor.execute(update_query, (serialized_obj,))
         self.connection.commit()
     
-    def delete(self, table_name, condition):
-        """
-        Delete data from the database based on a condition.
-        """
-        delete_query = f"DELETE FROM {table_name} WHERE {condition}"
-        self.cursor.execute(delete_query)
-        self.connection.commit()
+    #def delete(self, table_name, condition):
+    #    """
+    #    Delete data from the database based on a condition.
+    #    """
+    #    delete_query = f"DELETE FROM {table_name} WHERE {condition}"
+    #    self.cursor.execute(delete_query)
+    #    self.connection.commit()
     
     def extract(self, table_name):
         """
