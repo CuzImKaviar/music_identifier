@@ -14,17 +14,12 @@ st.title(page_title + " " + page_icon)
 all_songs = Song.get_all_songs()    
 
 with st.form("delete_form", clear_on_submit=True):
-    song_to_delete_title = st.selectbox('Song auswählen',options = all_songs, key="title")
+    song_to_delete = st.selectbox('Song auswählen',options = all_songs, key="title")
 
     submitted = st.form_submit_button("Titel löschen")
     if submitted:
-        print("Song to delete: ", song_to_delete_title)
-        #cursor.execute("SELECT artist FROM songs WHERE name=?", (song_to_delete_title,))
-        #song_to_delete_artist = cursor.fetchall()
+        print("Song to delete: ", song_to_delete)
+        title, artist = song_to_delete.split(" by ")
+        song = Song(title, artist, [])
+        song.delete()
         
-        #song_to_delete_title_artist = song_to_delete_title + "_" + song_to_delete_artist[0]
-        cursor.execute("DELETE FROM songs WHERE name=?", (song_to_delete_title))
-        
-        #cursor.execute("DROP TABLE {}".format(song_to_delete_title_artist))
-        con.commit()
-        con.close()

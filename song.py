@@ -26,9 +26,9 @@ class Song(Serializable):
         """
         Delete the song from the database.
         """
-        self.db.delete("songs", "title", self.title)
+        self.delete_entry("songs", "title", self.title)
         table_name = f"Hashmap_{self.title}_{self.artist}"
-        self.db.delete(table_name, "title", self.title)
+        self.remove_table(table_name)
 
         Serializable().close()
     
@@ -57,4 +57,5 @@ if __name__ == "__main__":
     hashmap = [(1, 2, 3, 4), (5, 6, 7, 8)]
     song1 = Song("title1", "artist1", hashmap)
     song1.save()
-    print(Song.get_all_songs())
+
+    song1.delete()
