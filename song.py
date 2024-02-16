@@ -1,7 +1,6 @@
 import sqlite3
 from database import DatabaseClient
 from serializer import Serializable
-from HashTuple import HashTuple
 
 
 class Song(Serializable):
