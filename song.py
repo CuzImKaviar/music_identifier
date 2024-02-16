@@ -5,11 +5,11 @@ from serializer import Serializable
 
 class Song(Serializable):
     
-    def __init__(self, title, artist, hashmap):
+    def __init__(self, title=None, artist=None, hashmap=None):
         super().__init__()
         self.title = title
         self.artist = artist
-        self.hashmap = hashmap
+        self.hashmap = hashmap if hashmap is not None else []
         self.db = DatabaseClient()
     
     def save(self):
@@ -44,26 +44,26 @@ class Song(Serializable):
             formatted_songs.append(formatted_song)
         return formatted_songs
     
-    def identify_song(self):
+    @classmethod
+    def identify(cls, hashmap):
         """
         Identify the song based on its hashmap.
         """
-        all_songs = self.get_all_songs()
+        all_songs = Serializable().deserialize("songs", ["title", "artist"])
         best_match = None
         best_match_count = 0
-
+        
         for song in all_songs:
             table_name = f"Hashmap_{song['title']}_{song['artist']}"
-            song_hashmap = Serializable().deserialize(table_name, ["anchor_point", "target_point", "delta_time", "time"])
+            table_name = table_name.replace(' ', '_')
             
-            match_count = sum(1 for point in self.hashmap if point in song_hashmap)
-
+            
+            match_count = Serializable().count_matching_hashes(table_name, hashmap)
             if match_count > best_match_count:
-                best_match = song
+                best_match = f"{song['title']} by {song['artist']}"
                 best_match_count = match_count
 
         return best_match
-
 
     def __str__(self):
         return f"{self.title} by {self.artist}"
@@ -74,8 +74,22 @@ class Song(Serializable):
 
 
 if __name__ == "__main__":
-    hashmap = [(1, 2, 3, 4), (5, 6, 7, 8)]
-    song1 = Song("title1", "artist1", hashmap)
-    song1.save()
+    import sqlite3
 
-    song1.delete()
+    import numpy as np
+    import librosa
+    import librosa.display
+    import matplotlib.pyplot as plt
+    from scipy.ndimage import maximum_filter
+    import settings as set
+    from audio_process import process_audio 
+    from audio_process import create_hashes_v1
+
+    song_snipped = "C:\\Users\\sebba\\Downloads\\CantinaBand3.wav"
+    fig, indices, times = process_audio(song_snipped)
+    hashmap = create_hashes_v1(indices, times)
+    
+    
+
+    detected_song = Song.identify(hashmap)
+    print(detected_song)
