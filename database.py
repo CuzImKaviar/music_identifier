@@ -4,7 +4,7 @@ from serializer import Serializable
 
 class DatabaseClient(Serializable):
     """
-    Database client connection + functiions to insert, update, delete and extract data
+    Database client connection + functions to insert, update, delete and extract data
     """
     # Turns the class into a naive singleton
     # --> not thread safe and doesn't handle inheritance particularly well
@@ -49,3 +49,9 @@ class DatabaseClient(Serializable):
         Extract data from the specified table.
         """
         return self.deserialize(table_name, [])
+    
+    def close(self):
+        """
+        Close the database connection.
+        """
+        super().close()
