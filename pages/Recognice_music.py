@@ -5,7 +5,8 @@ import librosa.display
 import matplotlib.pyplot as plt
 from scipy.ndimage import maximum_filter
 import settings as set
-from audio_process import process_audio 
+from audio_process import process_audio
+from audio_process import create_hashes_v1
 from song import Song
 
 # -------------- SETTINGS --------------
@@ -21,14 +22,13 @@ st.title(page_title + " " + page_icon)
 
 
 with st.form("Audioausschnitt erkennen", clear_on_submit=True):
-    # Datei hochladen
     audio = st.file_uploader("Upload an audio clip", type=["mp3", "wav"])
     submitted = st.form_submit_button("Song erkennen")
 
 if audio and submitted:
-    fig, hashmap = process_audio(audio)
+    fig, indices, times = process_audio(audio)
+    hashmap = create_hashes_v1(indices, times)
     st.pyplot(fig)
-    song_snipped = Song(hashmap)
-    detected_song = song_snipped.identify_song()
+    detected_song = Song.identify(hashmap)
     st.write(detected_song)
 
