@@ -1,5 +1,5 @@
 import streamlit as st
-#from songs import Song
+from song import Song
 import sqlite3
 
 
@@ -11,16 +11,10 @@ layout = "centered"
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
 
-con = sqlite3.connect('database.db')
-cursor = con.cursor()
-cursor.execute("SELECT name FROM songs")
-all_song_names = cursor.fetchall()
-print(all_song_names)
-
-    
+all_songs = Song.get_all_songs()    
 
 with st.form("delete_form", clear_on_submit=True):
-    song_to_delete_title = st.selectbox('Song auswählen',options = all_song_names, key="title")
+    song_to_delete_title = st.selectbox('Song auswählen',options = all_songs, key="title")
 
     submitted = st.form_submit_button("Titel löschen")
     if submitted:

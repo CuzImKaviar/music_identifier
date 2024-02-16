@@ -22,6 +22,28 @@ class Song(Serializable):
     
         Serializable().close()
 
+    def delete(self):
+        """
+        Delete the song from the database.
+        """
+        self.db.delete("songs", "title", self.title)
+        table_name = f"Hashmap_{self.title}_{self.artist}"
+        self.db.delete(table_name, "title", self.title)
+
+        Serializable().close()
+    
+    @classmethod
+    def get_all_songs(cls):
+        """
+        Get all songs from the database.
+        """
+        songs = Serializable().deserialize("songs", ["title", "artist"])
+        formatted_songs = []
+        for song in songs:
+            formatted_song = f"{song['title']} by {song['artist']}"
+            formatted_songs.append(formatted_song)
+        return formatted_songs
+
 
     def __str__(self):
         return f"{self.title} by {self.artist}"
@@ -34,5 +56,5 @@ class Song(Serializable):
 if __name__ == "__main__":
     hashmap = [(1, 2, 3, 4), (5, 6, 7, 8)]
     song1 = Song("title1", "artist1", hashmap)
-    print(song1.__dict__)
     song1.save()
+    print(Song.get_all_songs())
