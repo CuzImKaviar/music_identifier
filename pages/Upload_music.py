@@ -31,7 +31,6 @@ if audio and submitted:
     fig, indices, times = process_audio(audio)
     hashmap = create_hashes_v1(indices, times) 
     st.pyplot(fig)
-    #print(hashmap)
 
 
     song = Song(song_name, song_artist, hashmap)
