@@ -15,6 +15,7 @@ class Serializable(ABC):
         """
         Create a table in the database.
         """
+        table_name = table_name.replace(' ', '_')
         column_definitions = ', '.join([f"{column} TEXT" for column in columns])
         create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} ({column_definitions})"
         self.cursor.execute(create_table_query)
@@ -24,6 +25,7 @@ class Serializable(ABC):
         """
         Remove a table from the database.
         """
+        table_name = table_name.replace(' ', '_')
         remove_table_query = f"DROP TABLE IF EXISTS {table_name}"
         self.cursor.execute(remove_table_query)
         self.connection.commit()
@@ -32,6 +34,7 @@ class Serializable(ABC):
         """
         Delete an object from the database.
         """
+        table_name = table_name.replace(' ', '_')
         delete_query = f"DELETE FROM {table_name} WHERE {column} = ?"
         self.cursor.execute(delete_query, (value,))
         self.connection.commit()
@@ -62,6 +65,7 @@ class Serializable(ABC):
         """
         Deserialize an object from the database.
         """
+        table_name = table_name.replace(' ', '_')
         columns_str = ', '.join(columns)
         self.cursor.execute(f"SELECT {columns_str} FROM {table_name}")
         rows = self.cursor.fetchall()

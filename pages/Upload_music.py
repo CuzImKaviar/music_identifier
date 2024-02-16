@@ -24,7 +24,7 @@ with st.form("entry_form", clear_on_submit=True):
     # Datei hochladen
     song_name = st.text_input("Name des Songs", max_chars=64, placeholder="Name hier einfügen ...", key="Name")
     song_artist = st.text_input("Name des Künstlers", max_chars=64, placeholder="Künstler hier einfügen ...", key="Artist")
-    audio = st.file_uploader("Upload an audio file", type=["mp3"])
+    audio = st.file_uploader("Upload an audio file", type=["mp3", "wav"])
     submitted = st.form_submit_button("Neuen Song speichern")
 
 if audio and submitted:

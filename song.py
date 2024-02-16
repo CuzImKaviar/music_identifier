@@ -43,6 +43,26 @@ class Song(Serializable):
             formatted_song = f"{song['title']} by {song['artist']}"
             formatted_songs.append(formatted_song)
         return formatted_songs
+    
+    def identify_song(self):
+        """
+        Identify the song based on its hashmap.
+        """
+        all_songs = self.get_all_songs()
+        best_match = None
+        best_match_count = 0
+
+        for song in all_songs:
+            table_name = f"Hashmap_{song['title']}_{song['artist']}"
+            song_hashmap = Serializable().deserialize(table_name, ["anchor_point", "target_point", "delta_time", "time"])
+            
+            match_count = sum(1 for point in self.hashmap if point in song_hashmap)
+
+            if match_count > best_match_count:
+                best_match = song
+                best_match_count = match_count
+
+        return best_match
 
 
     def __str__(self):
