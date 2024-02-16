@@ -10,7 +10,7 @@ class Song(Serializable):
         super().__init__()
         self.title = title
         self.artist = artist
-        self.hashmap = [HashTuple(*hash) for hash in hashmap]
+        self.hashmap = hashmap
         self.db = DatabaseClient()
     
     def save(self):
@@ -18,10 +18,9 @@ class Song(Serializable):
         Save the song to the database.
         """
         self.serialize("songs", ["title", "artist"])
-        table_name = f"{self.title}_{self.artist}"
-        for hash in self.hashmap:
-            self.serialize(table_name, ["anchor_point", "target_point", "delta_time", "time"], hash)
-        
+        table_name = f"Hashmap_{self.title}_{self.artist}"
+        self.serialize(table_name, ["anchor_point", "target_point", "delta_time", "time"], self.hashmap)
+    
         Serializable().close()
 
 
@@ -35,8 +34,6 @@ class Song(Serializable):
 
 if __name__ == "__main__":
     hashmap = [(1, 2, 3, 4), (5, 6, 7, 8)]
-    song1 = Song("gzu222z", "182227", hashmap)
+    song1 = Song("title1", "artist1", hashmap)
     print(song1.__dict__)
     song1.save()
-
-    #Serializable().close()
