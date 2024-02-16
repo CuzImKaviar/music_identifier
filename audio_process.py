@@ -71,7 +71,7 @@ def create_hashes_v1(peaks_indices, times):
                 # Prüfen, ob der Ziel-Punkt innerhalb der Zeit- und Frequenzauflösung um den Ankerpunkt liegt
                 if (target_point[0] - anchor_point[0]) >= delay and abs(target_point[0] - anchor_point[0] - delay) <= time_resolution and abs(target_point[1] - anchor_point[1]) <= frequency_resolution:
                     # Hash-Tupel erstellen: (freq_A, freq_B, zeit_delta, Zeitpunkt von Ankerpunkt)
-                    hash_tuple = (anchor_point[1], target_point[1], target_time - anchor_time, anchor_time)
+                    hash_tuple = (int(anchor_point[1]), int(target_point[1]), target_time - anchor_time, anchor_time)
                     # Das Hash-Tupel der Liste der Hashes hinzufügen
                     hashes.append(hash_tuple)
     return hashes
