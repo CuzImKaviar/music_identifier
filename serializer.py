@@ -20,12 +20,11 @@ class Serializable(ABC):
         self.cursor.execute(create_table_query)
         self.connection.commit()
     
-    def serialize(self, table_name, columns, obj=None):
+    def serialize(self, table_name, columns, a_list=None):
         """
         Serialize an object and insert it into the database.
         """
-        if obj is None:
-            obj = self
+        if a_list is None:
             self.create_table(table_name, columns)
             obj_dict = self.__dict__.copy()
             obj_dict.pop('db_name', None)
@@ -39,7 +38,7 @@ class Serializable(ABC):
         else:
             self.create_table(table_name, columns)
             placeholders = ', '.join(['?' for _ in columns])
-            self.cursor.executemany(f"INSERT INTO {table_name} VALUES ({placeholders})", obj)
+            self.cursor.executemany(f"INSERT INTO {table_name} VALUES ({placeholders})", a_list)
             self.connection.commit()
 
 
@@ -47,12 +46,13 @@ class Serializable(ABC):
         """
         Deserialize an object from the database.
         """
-        self.create_table(table_name, columns)
-        self.cursor.execute(f"SELECT * FROM {table_name}")
+        columns_str = ', '.join(columns)
+        self.cursor.execute(f"SELECT {columns_str} FROM {table_name}")
         rows = self.cursor.fetchall()
         deserialized_objs = []
         for row in rows:
-            deserialized_objs.append(pickle.loads(row[0]))
+            obj_dict = {column: value for column, value in zip(columns, row)}
+            deserialized_objs.append(obj_dict)
         return deserialized_objs
 
     def close(self):
