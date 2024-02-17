@@ -6,16 +6,10 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import maximum_filter
 import settings as set
 
-def get_sample_rate(audio_file):
-    y, sr = librosa.load(audio_file, sr=None)
-    return sr
-
 def process_audio(audio_file):
-    # get the sample rate of the audio file
-    sample_rate = get_sample_rate(audio_file)
-
+   
     # Load the audio file with librosa
-    y, sr = librosa.load(audio_file, sr=sample_rate)  # Setzen der Samplingrate auf den festen Wert
+    y, sr = librosa.load(audio_file, sr=set.SAMPLE_RATE)  # Setzen der Samplingrate auf den festen Wert
 
     # Fourier-Transformation durchführen
     D = librosa.amplitude_to_db(np.abs(librosa.stft(y, n_fft=set.FFT_WINDOW_SIZE)), ref=np.max)
