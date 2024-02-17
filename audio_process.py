@@ -6,9 +6,36 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import maximum_filter
 import settings as set
 
+from mutagen.mp3 import MP3
+from mutagen.wavpack import WavPack
+import wave
+import tempfile
+
+def get_sample_rate(audio_file):
+    # Get the sample rate of the audio file
+    file_name = audio_file.name
+    if file_name.endswith('.mp3'):
+        audio = MP3(audio_file)
+        sample_rate = audio.info.sample_rate
+    elif file_name.endswith('.wav'):
+        with wave.open(audio_file, 'rb') as wav_file:
+            sample_rate = wav_file.getframerate()
+    else:
+        raise ValueError("Unsupported file format. Only .mp3 and .wav files are supported.")
+    return sample_rate
+
+
 def process_audio(audio_file):
-    # Audiodatei laden
-    y, sr = librosa.load(audio_file, sr=set.SAMPLE_RATE)  # Setzen der Samplingrate auf den festen Wert
+    # Get the sample rate of the audio file
+    sample_rate = get_sample_rate(audio_file)
+
+    # Save the uploaded file to a temporary file
+    temp_file = tempfile.NamedTemporaryFile(delete=False)
+    temp_file.write(audio_file.getvalue())
+    temp_file.close()
+
+    # Load the audio file with librosa
+    y, sr = librosa.load(temp_file.name, sr=sample_rate)  # Setzen der Samplingrate auf den festen Wert
 
     # Fourier-Transformation durchführen
     D = librosa.amplitude_to_db(np.abs(librosa.stft(y, n_fft=set.FFT_WINDOW_SIZE)), ref=np.max)
