@@ -18,7 +18,7 @@ def process_audio(audio_file):
     num_frames = D.shape[1]
 
     # Use maximum filter to highlight peaks in the spectrogram
-    max_filtered = maximum_filter(D, size=(set.PEAK_BOX_SIZE, set.PEAK_BOX_SIZE+5), mode='constant', cval=-np.inf)
+    max_filtered = maximum_filter(D, size=(set.PEAK_BOX_SIZE, set.PEAK_BOX_SIZE + set.TEST), mode='constant', cval=-np.inf)
 
     # Get indices of peaks
     peaks_indices = np.argwhere((D == max_filtered) & (D > set.MIN_DB_FILTER))
