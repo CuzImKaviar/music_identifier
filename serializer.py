@@ -15,7 +15,7 @@ class Serializable(ABC):
         """
         Create a table in the database.
         """
-        table_name = table_name.replace(' ', '_')
+        table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
         column_definitions = ', '.join([f"{column} TEXT" for column in columns])
         create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} ({column_definitions})"
         self.cursor.execute(create_table_query)
@@ -25,7 +25,7 @@ class Serializable(ABC):
         """
         Remove a table from the database.
         """
-        table_name = table_name.replace(' ', '_')
+        table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
         remove_table_query = f"DROP TABLE IF EXISTS {table_name}"
         self.cursor.execute(remove_table_query)
         self.connection.commit()
@@ -34,7 +34,7 @@ class Serializable(ABC):
         """
         Delete an object from the database.
         """
-        table_name = table_name.replace(' ', '_')
+        table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
         delete_query = f"DELETE FROM {table_name} WHERE {column} = ?"
         self.cursor.execute(delete_query, (value,))
         self.connection.commit()
@@ -44,17 +44,20 @@ class Serializable(ABC):
         Serialize an object and insert it into the database.
         """
         if a_list is None:
+            table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
             self.create_table(table_name, columns)
             obj_dict = self.__dict__.copy()
             obj_dict.pop('db_name', None)
             obj_dict.pop('connection', None)
             obj_dict.pop('cursor', None)
             obj_dict.pop('db', None)
+            
             values = [obj_dict.get(column) for column in columns]
             placeholders = ', '.join(['?' for _ in columns])
             self.cursor.execute(f"INSERT INTO {table_name} VALUES ({placeholders})", tuple(values))
             self.connection.commit()
         else:
+            table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
             self.create_table(table_name, columns)
             placeholders = ', '.join(['?' for _ in columns])
             self.cursor.executemany(f"INSERT INTO {table_name} VALUES ({placeholders})", a_list)
@@ -65,7 +68,7 @@ class Serializable(ABC):
         """
         Deserialize an object from the database.
         """
-        table_name = table_name.replace(' ', '_')
+        table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
         columns_str = ', '.join(columns)
         self.cursor.execute(f"SELECT {columns_str} FROM {table_name}")
         rows = self.cursor.fetchall()
@@ -85,6 +88,7 @@ class Serializable(ABC):
         """
         Count the number of matching hashes in the given table.
         """
+        table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
         song_data = [(anchor_point, target_point) for anchor_point, target_point, _, _ in song_data]
         flat_song_data = [item for sublist in song_data for item in sublist]
         placeholders = ', '.join(['(?, ?)' for _ in song_data])
