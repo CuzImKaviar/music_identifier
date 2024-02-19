@@ -64,9 +64,9 @@ class Song(Serializable):
             
             match_count = Serializable().count_matching_hashes(table_name, hashmap)
             if match_count > best_match_count:
-                best_match = song
+                best_match = Song(song['title'], song['artist'], [])
                 best_match_count = match_count
-        print(song)
+        print(F"Best match: {best_match}, with {best_match_count} matching hashes.")
         return best_match
 
     def __str__(self):
@@ -78,6 +78,7 @@ class Song(Serializable):
 
 
 if __name__ == "__main__":
+    """
     import sqlite3
 
     import numpy as np
@@ -97,3 +98,5 @@ if __name__ == "__main__":
 
     detected_song = Song.identify(hashmap)
     print(detected_song)
+    """
+    print(Serializable().deserialize("songs", ["title", "artist"]))
