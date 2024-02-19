@@ -16,6 +16,8 @@ class Song(Serializable):
         """
         Save the song to the database.
         """
+        print("Song saved: ", self)
+        
         self.serialize("songs", ["title", "artist"])
         table_name = f"Hashmap_{self.title}_{self.artist}"
         self.serialize(table_name, ["anchor_point", "target_point", "delta_time", "time"], self.hashmap)
@@ -26,6 +28,8 @@ class Song(Serializable):
         """
         Delete the song from the database.
         """
+        print("Song deleted: ", self)
+
         self.delete_entry("songs", "title", self.title)
         table_name = f"Hashmap_{self.title}_{self.artist}"
         self.remove_table(table_name)
@@ -60,9 +64,9 @@ class Song(Serializable):
             
             match_count = Serializable().count_matching_hashes(table_name, hashmap)
             if match_count > best_match_count:
-                best_match = f"{song['title']} by {song['artist']}"
+                best_match = song
                 best_match_count = match_count
-
+        print(song)
         return best_match
 
     def __str__(self):

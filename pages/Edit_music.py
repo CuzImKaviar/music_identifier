@@ -18,7 +18,6 @@ with st.form("delete_form", clear_on_submit=True):
 
     submitted = st.form_submit_button("Titel löschen")
     if submitted:
-        print("Song to delete: ", song_to_delete)
         title, artist = song_to_delete.split(" by ")
         song = Song(title, artist, [])
         song.delete()
