@@ -1,7 +1,8 @@
 import sqlite3
 from database import DatabaseClient
 from serializer import Serializable
-
+import requests
+from urllib.parse import quote_plus
 
 class Song(Serializable):
     
@@ -68,6 +69,21 @@ class Song(Serializable):
                 best_match_count = match_count
         print(F"Best match: {best_match}, with {best_match_count} matching hashes.")
         return best_match
+
+    def search_youtube_video(self):
+        query = f"{self.title} {self.artist} official music video"
+        url = f"https://www.youtube.com/results?search_query={quote_plus(query)}"
+        response = requests.get(url)
+        if response.status_code == 200:
+            video_id = None
+            start_index = response.text.find('{"videoRenderer":{"videoId":"')
+            if start_index != -1:
+                end_index = response.text.find('"', start_index + 30)
+                video_id = response.text[start_index + 29:end_index]
+            if video_id:
+                return f"https://www.youtube.com/watch?v={video_id}"
+        return None
+
 
     def __str__(self):
         return f"{self.title} by {self.artist}"
