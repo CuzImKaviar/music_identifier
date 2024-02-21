@@ -7,8 +7,8 @@ SAMPLE_RATE = 44100
 MIN_DB_FILTER = -45#-50
 
 # Größe des Peak-Box-Filters
-PEAK_BOX_SIZE = 30 #30
-TEST = 10 #7
+PEAK_BOX_SIZE = 31 #30
+TEST = 11 #7
 
 # Höhe der Zielzone in Hz
 TARGET_F = float(4000)  #4000
