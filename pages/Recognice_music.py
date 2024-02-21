@@ -30,13 +30,14 @@ if audio and submitted:
     hashmap = create_hashes_v1(indices, times)
     st.pyplot(fig)
     detected_song = Song.identify(hashmap)
-    st.write(detected_song)
 
     video_link = detected_song.search_youtube_video()
     if video_link:
         st.video(video_link)
+        st.write(detected_song)
         st.write("YouTube Video Link:", video_link)
     else:
+        st.write(detected_song)
         st.write("Kein passendes Video gefunden.")
        
 
