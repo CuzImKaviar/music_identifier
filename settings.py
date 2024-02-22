@@ -4,14 +4,14 @@
 SAMPLE_RATE = 44100
 
 #MIN DB FILTER
-MIN_DB_FILTER = -45#-50
+MIN_DB_FILTER = -50#-50
 
 # Größe des Peak-Box-Filters
-PEAK_BOX_SIZE = 31 #30
+PEAK_BOX_SIZE = 32 #30
 TEST = 11 #7
 
 # Höhe der Zielzone in Hz
-TARGET_F = float(4000)  #4000
+TARGET_F = float(5000)  #4000
 
 TARGET_T = float(1.8)  #1.8
 

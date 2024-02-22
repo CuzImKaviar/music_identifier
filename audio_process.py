@@ -55,10 +55,19 @@ def create_hashes_v1(peaks_indices, times):
     frequency_resolution = set.TARGET_F
     delay = set.TARGET_START_DELAY
 
-    hashes = [(int(anchor_point[1]), int(target_point[1]), target_time - anchor_time, anchor_time)
-              for i, anchor_point in enumerate(peaks_indices)
-              for j, target_point in enumerate(peaks_indices[i + 1:], start=i+1)
-              if (anchor_time := times[anchor_point[1]]) < (target_time := times[target_point[1]]) and
-              (target_point[0] - anchor_point[0]) >= delay and abs(target_point[0] - anchor_point[0] - delay) <= time_resolution and abs(target_point[1] - anchor_point[1]) <= frequency_resolution]
+    hashes = []
+
+    for i, anchor_point in enumerate(peaks_indices):
+        anchor_time = times[anchor_point[1]]
+        for j, target_point in enumerate(peaks_indices[i + 1:], start=i + 1):
+            if (target_point[0] - anchor_point[0]) < delay:
+                break  # Frühes Abbruchkriterium
+            target_time = times[target_point[1]]
+            if anchor_time >= target_time:
+                continue  # Keine Hashes für ungültige Zeiten
+            time_diff = target_time - anchor_time
+            if time_diff > time_resolution or abs(target_point[1] - anchor_point[1]) > frequency_resolution:
+                continue  # Überprüfen der Zeit- und Frequenzauflösung
+            hashes.append((int(anchor_point[1]), int(target_point[1]), time_diff, anchor_time))
 
     return hashes

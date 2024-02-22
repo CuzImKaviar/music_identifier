@@ -10,6 +10,7 @@ from audio_process import create_hashes_v1
 from song import Song
 
 
+
 # -------------- SETTINGS --------------
 page_title = "Recognice"
 page_icon = ":musical_note:"  # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
@@ -26,6 +27,7 @@ with st.form("Audioausschnitt erkennen", clear_on_submit=True):
     submitted = st.form_submit_button("Song erkennen")
 
 if audio and submitted:
+
     fig, indices, times = process_audio(audio)
     hashmap = create_hashes_v1(indices, times)
     st.pyplot(fig)
