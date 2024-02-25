@@ -10,7 +10,9 @@ def file_to_spectrogram(filename):
     """Calculates the spectrogram of a file."""
     audio, _ = librosa.load(filename, sr=settings.SAMPLE_RATE, mono=True)
     n_fft = int(settings.SAMPLE_RATE * settings.FFT_WINDOW_SIZE)
-    return librosa.stft(audio, n_fft=n_fft)
+    hop_length = n_fft // 4
+    spectogram = librosa.stft(audio, n_fft=n_fft, hop_length=hop_length)
+    return spectogram
 
 
 def find_peaks(spectogram):
@@ -115,42 +117,100 @@ def fingerprint_audio(frames):
     f = librosa.fft_frequencies(sr=settings.SAMPLE_RATE, n_fft=int(settings.SAMPLE_RATE * settings.FFT_WINDOW_SIZE))
     peaks = find_peaks(spectogram)
     peaks = idxs_to_tf_pairs(peaks, t, f)
-    return hash_points(peaks, "recorded")
+    return hash_points(peaks)
 
-def plot_all(filename, hashes):
-    """Plot a spectrogram, a maximum filtered spectrogram and a constellation map."""
-    # Calculate the spectrogram of the file
-    spectrogram = file_to_spectrogram(filename)
 
-    # Find peaks in the spectrogram
-    peaks = find_peaks(spectrogram)
-
-    # Maximum filtered spectrogram
-    data_max = maximum_filter(np.abs(spectrogram), size=settings.PEAK_BOX_SIZE, mode='constant', cval=0.0)
-
-    fig, ax = plt.subplots(3, 1, figsize=(10, 12))
-
-    # Plot the original spectrogram
-    img_original = librosa.display.specshow(librosa.amplitude_to_db(np.abs(spectrogram), ref=np.max), sr=settings.SAMPLE_RATE, x_axis='time', y_axis='log', ax=ax[0])
-    ax[0].set_title('Original Spectrogram')
-    ax[0].set_xlabel('Time (falsch aber ich bekommes es nicht gefixed)')
-    ax[0].set_ylabel('Frequency')
-    fig.colorbar(img_original, ax=ax[0], format='%+2.0f dB')
-
-    # Plot the filtered spectrogram to highlight peaks
-    img_filtered = librosa.display.specshow(librosa.amplitude_to_db(np.abs(data_max), ref=np.max), sr=settings.SAMPLE_RATE, x_axis='time', y_axis='log', ax=ax[1])
-    ax[1].set_title('Filtered Spectrogram (Peaks Highlighted)')
-    ax[1].set_xlabel('Time (falsch aber ich bekommes es nicht gefixed)')
-    ax[1].set_ylabel('Frequency')
-    fig.colorbar(img_filtered, ax=ax[1], format='%+2.0f dB')
-
-    # Constellation map with downsampled points
-    # Convert hashes to points
-    points = [(hash[1], hash[0]) for hash in hashes]
-    ax[2].scatter(*zip(*points))
-    ax[2].set_title('Constellation Map (Downsampled)')
-    ax[2].set_xlabel('Time (die stimmt)')
-    ax[2].set_ylabel('Frequency')
-
+def plot_waveform(filename):
+    y, sr = librosa.load(filename)
+    fig, ax = plt.subplots(figsize=(10, 4))
+    t = np.arange(len(y)) / sr
+    t_min_sec = ["%02d:%02d" % (m, s) for m, s in zip(t // 60, t % 60)]
+    ax.plot(t, y)
+    ax.set_xlim(0, len(y) / sr)
+    ax.set_title('Original Waveform')
+    ax.set_xlabel('Time [min:sec]')
+    ax.set_ylabel('Amplitude [dB]')
+    if len(y) / sr > 30:
+        ax.set_xticks(t[::sr*30])
+        ax.set_xticklabels(t_min_sec[::sr*30])
+    else:
+        ax.set_xticks(t[::sr])
+        ax.set_xticklabels(t_min_sec[::sr])
     plt.tight_layout()
+    return fig
+
+def plot_spectrogram(filename):
+    spectrogram = file_to_spectrogram(filename)
+    fig, ax = plt.subplots(figsize=(10, 4))
+    hop_length = int(settings.SAMPLE_RATE * settings.FFT_WINDOW_SIZE) // 4
+    img = librosa.display.specshow(librosa.amplitude_to_db(np.abs(spectrogram), ref=np.max), sr=settings.SAMPLE_RATE, hop_length=hop_length, x_axis='time', y_axis='log', ax=ax)
+    ax.set_title('Original Spectrogram')
+    ax.set_xlabel('Time [min:sec]')
+    ax.set_ylabel('Frequency [Hz]')
+    fig.colorbar(img, ax=ax, format='%+2.0f dB')
+    plt.tight_layout()
+    return fig
+
+def plot_filtered_spectrogram(filename):
+    spectrogram = file_to_spectrogram(filename)
+    peaks = maximum_filter(np.abs(spectrogram), size=settings.PEAK_BOX_SIZE, mode='constant', cval=0.0)
+    fig, ax = plt.subplots(figsize=(10, 4))
+    hop_length = int(settings.SAMPLE_RATE * settings.FFT_WINDOW_SIZE) // 4
+    img = librosa.display.specshow(librosa.amplitude_to_db(np.abs(peaks), ref=np.max), sr=settings.SAMPLE_RATE, hop_length=hop_length, x_axis='time', y_axis='log', ax=ax)
+    ax.set_title('Filtered Spectrogram (Peaks Highlighted)')
+    ax.set_xlabel('Time [min:sec]')
+    ax.set_ylabel('Frequency [Hz]')
+    fig.colorbar(img, ax=ax, format='%+2.0f dB')
+    plt.tight_layout()
+    return fig
+
+def plot_constellation_map(filename):
+    spectogram = file_to_spectrogram(filename)
+    t = librosa.frames_to_time(np.arange(spectogram.shape[1]))
+    f = librosa.fft_frequencies(sr=settings.SAMPLE_RATE, n_fft=int(settings.SAMPLE_RATE * settings.FFT_WINDOW_SIZE))
+    peaks = find_peaks(spectogram)
+    anchor_points = set(tuple(x) for x in idxs_to_tf_pairs(peaks, t, f))
+
+    target_points = set()
+    for anchor in anchor_points:
+        for target in target_zone(
+            anchor, anchor_points, settings.TARGET_T, settings.TARGET_F, settings.TARGET_START
+        ):
+            target_points.add(target)
+    
+    target_points = target_points - anchor_points
+
+    hop_length = int(settings.SAMPLE_RATE * settings.FFT_WINDOW_SIZE) // 4
+    anchor_points = set([(point[1] / hop_length, point[0]) for point in anchor_points])
+    target_points = set([(point[1] / hop_length, point[0]) for point in target_points])
+    fig, ax = plt.subplots(figsize=(10, 4))
+
+    if target_points:
+        ax.scatter(*zip(*anchor_points), s=5, color='blue', label='Anchor Points')
+        ax.scatter(*zip(*target_points), s=5, color='red', label='Target Points')
+    else:
+        ax.scatter(*zip(*anchor_points), s=5, color='blue', label='Anchor Points & Target Points')
+    
+    ax.set_title('Constellation Map (Downsampled)')
+    ax.set_xlabel('Time [s]')
+    ax.set_ylabel('Frequency [Hz]')
+    ax.legend()
+    plt.tight_layout()
+    return fig
+
+def plot_all(filename):
+    fig, axs = plt.subplots(4, 1, figsize=(10, 16))
+
+    fig_waveform = plot_waveform(filename)
+    axs[0].imshow(fig_waveform)
+
+    fig_spectrogram = plot_spectrogram(filename)
+    axs[1].imshow(fig_spectrogram)
+
+    fig_filtered_spectrogram = plot_filtered_spectrogram(filename)
+    axs[2].imshow(fig_filtered_spectrogram)
+
+    fig_constellation_map = plot_constellation_map(filename)
+    axs[3].imshow(fig_constellation_map)
+
     return fig

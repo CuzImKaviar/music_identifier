@@ -6,19 +6,32 @@ import librosa.display
 import matplotlib.pyplot as plt
 import settings as set
 from audio_process import fingerprint_file
-from audio_process import plot_all
+from audio_process import plot_all, plot_waveform, plot_constellation_map, plot_filtered_spectrogram, plot_spectrogram
 from song import Song
 
 
-song_snipped = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\3_Never_Gonna_Give_You_Up.wav"
+song_snipped = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\Never_Gonna_Give_You_Up.wav"
 hashes = fingerprint_file(song_snipped)
+#print(hashes)
 #song = Song("Never Gonna Giva You Up", "Rick Astley", hashes)
 #song.save()
 #song = Song.identify(hashes)
 #print(song)
 
-fig = plot_all(song_snipped, hashes)
-plt.show()
+#fig_waveform, fig_spectrogram, fig_filtered_spectrogram, fig_constellation_map = plot_all(song_snipped, hashes)
+#fig_waveform.show()
+#fig_spectrogram.show()
+#fig_filtered_spectrogram.show()
+#fig_constellation_map.show()
+
+#fig = plot_waveform(song_snipped)
+
+#fig = plot_spectrogram(song_snipped)
+
+#fig = plot_filtered_spectrogram(song_snipped)
+
+fig = plot_constellation_map(song_snipped)
+fig.show()
 
 '''
 audio = "C:\\Users\\sebba\\Downloads\\audio.mp3"
