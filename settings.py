@@ -1,21 +1,27 @@
-# settings.py
+""" Settings file for the application """
 
-# Abtastfrequenz
+
+
 SAMPLE_RATE = 44100
+""" File gets resampled to this sample rate """
 
-#MIN DB FILTER
-MIN_DB_FILTER = -50#-50
+PEAK_BOX_SIZE = 30
+""" Size of the box for the maximum filter """
 
-# Größe des Peak-Box-Filters
-PEAK_BOX_SIZE = 32 #30
-TEST = 11 #7
+POINT_EFFICIENCY = 0.8
+""" Number of peaks for each file, number between 0 and 1 """
 
-# Höhe der Zielzone in Hz
-TARGET_F = float(5000)  #4000
+TARGET_START = 0.05 
+""" Seconds after anchor point to start target point search """
 
-TARGET_T = float(1.8)  #1.8
+TARGET_T = 1.8
+""" Time resolution for the hash map """
 
-TARGET_START_DELAY = float(0.05)
+TARGET_F = 4000
+""" Frequency resolution for the hash map, number between 0 and 0.5 * SAMPLE_RATE """
 
-FFT_WINDOW_SIZE = 1024#2048
-# How many seconds after an anchor point to start the target zone for pairing.
+FFT_WINDOW_SIZE = 0.2
+""" Size of the FFT window in seconds """
+
+NUM_WORKERS = 24
+""" Number of workers for the parallel processing """

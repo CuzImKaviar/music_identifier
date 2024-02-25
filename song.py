@@ -21,7 +21,7 @@ class Song(Serializable):
         
         self.serialize("songs", ["title", "artist"])
         table_name = f"Hashmap_{self.title}_{self.artist}"
-        self.serialize(table_name, ["anchor_point", "target_point", "delta_time", "time"], self.hashmap)
+        self.serialize(table_name, ["anchor_point", "target_point"], self.hashmap)
     
         Serializable().close()
 

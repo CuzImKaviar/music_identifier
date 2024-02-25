@@ -5,8 +5,7 @@ import librosa.display
 import matplotlib.pyplot as plt
 from scipy.ndimage import maximum_filter
 import settings as set
-from audio_process import process_audio
-from audio_process import create_hashes_v1
+from audio_process import fingerprint_file
 from song import Song
 
 
@@ -28,10 +27,10 @@ with st.form("Audioausschnitt erkennen", clear_on_submit=True):
 
 if audio and submitted:
 
-    fig, indices, times = process_audio(audio)
-    hashmap = create_hashes_v1(indices, times)
-    st.pyplot(fig)
-    detected_song = Song.identify(hashmap)
+    
+    hashes = fingerprint_file(audio)
+    #st.pyplot(fig)
+    detected_song = Song.identify(hashes)
 
     if detected_song:
         video_link = detected_song.search_youtube_video()

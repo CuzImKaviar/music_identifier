@@ -4,22 +4,19 @@ import numpy as np
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
-from scipy.ndimage import maximum_filter
 import settings as set
-from audio_process import process_audio 
-from audio_process import create_hashes_v1
+from audio_process import fingerprint_file
 from song import Song
 
 
-song_snipped = "C:\\Users\\sebba\\Downloads\\CantinaBand3.wav"
-fig, indices, times = process_audio(song_snipped)
-hashmap = create_hashes_v1(indices, times)
+song_snipped = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\3_Never_Gonna_Give_You_Up.wav"
+hashes = fingerprint_file(song_snipped)
+#song = Song("Never Gonna Giva You Up", "Rick Astley", hashes)
+#song.save()
+song = Song.identify(hashes)
+print(song)
 
 
-
-
-detected_song = Song.identify(hashmap)
-print(detected_song)
 
 '''
 audio = "C:\\Users\\sebba\\Downloads\\audio.mp3"

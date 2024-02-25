@@ -1,8 +1,5 @@
 import sqlite3
-import pickle
-
 from typing import Any, Dict, List, Tuple
-
 from abc import ABC, abstractmethod
 
 class Serializable(ABC):
@@ -89,7 +86,7 @@ class Serializable(ABC):
         Count the number of matching hashes in the given table.
         """
         table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
-        song_data = [(anchor_point, target_point) for anchor_point, target_point, _, _ in song_data]
+        song_data = [(anchor_point, target_point) for anchor_point, target_point in song_data]
         flat_song_data = [item for sublist in song_data for item in sublist]
         placeholders = ', '.join(['(?, ?)' for _ in song_data])
         query = f"SELECT COUNT(*) FROM {table_name} WHERE (anchor_point, target_point) IN ({placeholders})"
