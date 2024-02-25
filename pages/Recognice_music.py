@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 from scipy.ndimage import maximum_filter
 import settings as set
 from audio_process import fingerprint_file
+from audio_process import plot_all
 from song import Song
 
 
@@ -29,6 +30,7 @@ if audio and submitted:
 
     
     hashes = fingerprint_file(audio)
+    #fig = plot_all(audio, hashes)
     #st.pyplot(fig)
     detected_song = Song.identify(hashes)
 

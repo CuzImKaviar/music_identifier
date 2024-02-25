@@ -35,8 +35,6 @@ if audio and submitted:
 
     hashes = fingerprint_file(audio)
     #fig = plot_all(audio, hashes)
-    #fig, indices, times = process_audio(audio)
-    #hashmap = create_hashes_v1(indices, times) 
     #st.pyplot(fig)
 
     # Endzeitpunkt erfassen

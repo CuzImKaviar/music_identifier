@@ -131,14 +131,14 @@ def plot_all(filename, hashes):
     fig, ax = plt.subplots(3, 1, figsize=(10, 12))
 
     # Plot the original spectrogram
-    img_original = librosa.display.specshow(librosa.amplitude_to_db(spectrogram, ref=np.max), sr=settings.SAMPLE_RATE, x_axis='time', y_axis='log', ax=ax[0])
+    img_original = librosa.display.specshow(librosa.amplitude_to_db(np.abs(spectrogram), ref=np.max), sr=settings.SAMPLE_RATE, x_axis='time', y_axis='log', ax=ax[0])
     ax[0].set_title('Original Spectrogram')
     ax[0].set_xlabel('Time (falsch aber ich bekommes es nicht gefixed)')
     ax[0].set_ylabel('Frequency')
     fig.colorbar(img_original, ax=ax[0], format='%+2.0f dB')
 
     # Plot the filtered spectrogram to highlight peaks
-    img_filtered = librosa.display.specshow(librosa.amplitude_to_db(data_max, ref=np.max), sr=settings.SAMPLE_RATE, x_axis='time', y_axis='log', ax=ax[1])
+    img_filtered = librosa.display.specshow(librosa.amplitude_to_db(np.abs(data_max), ref=np.max), sr=settings.SAMPLE_RATE, x_axis='time', y_axis='log', ax=ax[1])
     ax[1].set_title('Filtered Spectrogram (Peaks Highlighted)')
     ax[1].set_xlabel('Time (falsch aber ich bekommes es nicht gefixed)')
     ax[1].set_ylabel('Frequency')

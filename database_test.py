@@ -6,6 +6,7 @@ import librosa.display
 import matplotlib.pyplot as plt
 import settings as set
 from audio_process import fingerprint_file
+from audio_process import plot_all
 from song import Song
 
 
@@ -13,10 +14,11 @@ song_snipped = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\3_Never_Gonna_Give
 hashes = fingerprint_file(song_snipped)
 #song = Song("Never Gonna Giva You Up", "Rick Astley", hashes)
 #song.save()
-song = Song.identify(hashes)
-print(song)
+#song = Song.identify(hashes)
+#print(song)
 
-
+fig = plot_all(song_snipped, hashes)
+plt.show()
 
 '''
 audio = "C:\\Users\\sebba\\Downloads\\audio.mp3"
