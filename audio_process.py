@@ -4,6 +4,7 @@ import numpy as np
 import librosa
 from scipy.ndimage import maximum_filter
 from scipy.signal import spectrogram
+import io
 import settings
 
 
@@ -15,15 +16,15 @@ def file_to_spectrogram(filename):
     return spectrogram(audio, settings.SAMPLE_RATE, nperseg=nperseg, noverlap=hop_length)
 
 
-def find_peaks(spectogram):
+def find_peaks(Sxx):
     """Finds peaks in a spectrogram."""
-    data_max = maximum_filter(spectogram, size=settings.PEAK_BOX_SIZE, mode='constant', cval=0.0)
-    peak_goodmask = (spectogram == data_max)
+    data_max = maximum_filter(Sxx, size=settings.PEAK_BOX_SIZE, mode='constant', cval=0.0)
+    peak_goodmask = (Sxx == data_max)
     y_peaks, x_peaks = peak_goodmask.nonzero()
-    peak_values = spectogram[y_peaks, x_peaks]
+    peak_values = Sxx[y_peaks, x_peaks]
     i = peak_values.argsort()[::-1]
     j = [(y_peaks[idx], x_peaks[idx]) for idx in i]
-    total = spectogram.shape[0] * spectogram.shape[1]
+    total = Sxx.shape[0] * Sxx.shape[1]
     peak_target = int((total / (settings.PEAK_BOX_SIZE**2)) * settings.POINT_EFFICIENCY)
     return j[:peak_target]
 
@@ -95,13 +96,23 @@ def fingerprint_file(filename):
     :param filename: The path to the file.
     :returns: Hash points.
     """
-    f, t, spectogram = file_to_spectrogram(filename)
-    peaks = find_peaks(spectogram)
+    f, t, Sxx = file_to_spectrogram(filename)
+    peaks = find_peaks(Sxx)
     peaks = idxs_to_tf_pairs(peaks, t, f)
     return hash_points(peaks)
 
+def convert_bytes_to_frames(audio_bytes):
+    """Converts audio bytes to frames. 
+    :param audio_bytes: The audio bytes.
+    :returns: The frames.
+    """
+    nperseg = int(settings.SAMPLE_RATE * settings.FFT_WINDOW_SIZE)
+    hop_length = nperseg // 4
+    audio_array, _ = librosa.load(io.BytesIO(audio_bytes), sr=settings.SAMPLE_RATE, dtype=np.float32)
+    frames = librosa.util.frame(audio_array, frame_length=nperseg, hop_length=hop_length)
+    return frames.flatten()
 
-def fingerprint_audio(frames):
+def fingerprint_audio(audio_bytes):
     """Generate hashes for a series of audio frames.
 
     Used when recording audio.
@@ -109,11 +120,12 @@ def fingerprint_audio(frames):
     :param frames: A mono audio stream. Data type is any that ``scipy.signal.spectrogram`` accepts.
     :returns: The output of :func:`hash_points`.
     """
-    n_fft = int(settings.SAMPLE_RATE * settings.FFT_WINDOW_SIZE)
-    spectogram = librosa.stft(frames, n_fft=n_fft)
-    t = librosa.frames_to_time(np.arange(spectogram.shape[1]))
-    f = librosa.fft_frequencies(sr=settings.SAMPLE_RATE, n_fft=int(settings.SAMPLE_RATE * settings.FFT_WINDOW_SIZE))
-    peaks = find_peaks(spectogram)
+    # convert audio bytes to frames
+    frames = convert_bytes_to_frames(audio_bytes)
+    
+    # create hash points
+    f, t, Sxx = spectrogram(frames)
+    peaks = find_peaks(Sxx)
     peaks = idxs_to_tf_pairs(peaks, t, f)
     return hash_points(peaks)
 
@@ -138,10 +150,10 @@ def plot_waveform(filename):
     return fig
 
 def plot_spectrogram(filename):
-    f, t, spectrogram = file_to_spectrogram(filename)
+    f, t, Sxx = file_to_spectrogram(filename)
     fig, ax = plt.subplots(figsize=(10, 4))
     hop_length = int(settings.SAMPLE_RATE * settings.FFT_WINDOW_SIZE) // 4
-    img = librosa.display.specshow(librosa.amplitude_to_db(np.abs(spectrogram), ref=np.max), sr=settings.SAMPLE_RATE, hop_length=hop_length, x_axis='time', y_axis='log', ax=ax)
+    img = librosa.display.specshow(librosa.amplitude_to_db(np.abs(Sxx), ref=np.max), sr=settings.SAMPLE_RATE, hop_length=hop_length, x_axis='time', y_axis='log', ax=ax)
     ax.set_title('Original Spectrogram')
     ax.set_xlabel('Time [min:sec]')
     ax.set_ylabel('Frequency [Hz]')
@@ -150,8 +162,8 @@ def plot_spectrogram(filename):
     return fig
 
 def plot_filtered_spectrogram(filename):
-    f, t, spectrogram = file_to_spectrogram(filename)
-    peaks = maximum_filter(np.abs(spectrogram), size=settings.PEAK_BOX_SIZE, mode='constant', cval=0.0)
+    f, t, Sxx = file_to_spectrogram(filename)
+    peaks = maximum_filter(np.abs(Sxx), size=settings.PEAK_BOX_SIZE, mode='constant', cval=0.0)
     fig, ax = plt.subplots(figsize=(10, 4))
     hop_length = int(settings.SAMPLE_RATE * settings.FFT_WINDOW_SIZE) // 4
     img = librosa.display.specshow(librosa.amplitude_to_db(np.abs(peaks), ref=np.max), sr=settings.SAMPLE_RATE, hop_length=hop_length, x_axis='time', y_axis='log', ax=ax)
@@ -163,8 +175,8 @@ def plot_filtered_spectrogram(filename):
     return fig
 
 def plot_constellation_map(filename):
-    f, t, spectogram = file_to_spectrogram(filename)
-    peaks = find_peaks(spectogram)
+    f, t, Sxx = file_to_spectrogram(filename)
+    peaks = find_peaks(Sxx)
     anchor_points = set(tuple(x) for x in idxs_to_tf_pairs(peaks, t, f))
 
     target_points = set()
