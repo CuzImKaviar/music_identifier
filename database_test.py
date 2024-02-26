@@ -10,13 +10,14 @@ from audio_process import plot_all, plot_waveform, plot_constellation_map, plot_
 from song import Song
 
 
-song_snipped = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\Never_Gonna_Give_You_Up.wav"
+song_snipped = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\3_Running_Up_That_Hill_instrumental.wav"
 hashes = fingerprint_file(song_snipped)
 #print(hashes)
-#song = Song("Never Gonna Giva You Up", "Rick Astley", hashes)
+#song = Song("Running up that Hill", "GZUZ", hashes)
+#song.delete()
 #song.save()
-#song = Song.identify(hashes)
-#print(song)
+song = Song.identify(hashes)
+print(song)
 
 #fig_waveform, fig_spectrogram, fig_filtered_spectrogram, fig_constellation_map = plot_all(song_snipped, hashes)
 #fig_waveform.show()
@@ -30,8 +31,8 @@ hashes = fingerprint_file(song_snipped)
 
 #fig = plot_filtered_spectrogram(song_snipped)
 
-fig = plot_constellation_map(song_snipped)
-fig.show()
+#fig = plot_constellation_map(song_snipped)
+#fig.show()
 
 '''
 audio = "C:\\Users\\sebba\\Downloads\\audio.mp3"

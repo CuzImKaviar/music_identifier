@@ -21,7 +21,7 @@ class Song(Serializable):
         
         self.serialize("songs", ["title", "artist"])
         table_name = f"Hashmap_{self.title}_{self.artist}"
-        self.serialize(table_name, ["anchor_point", "target_point"], self.hashmap)
+        self.serialize(table_name, ["HASH INTEGER", "Time_Delta REAL"], self.hashmap)
     
         Serializable().close()
 
@@ -60,7 +60,7 @@ class Song(Serializable):
         
         for song in all_songs:
             table_name = f"Hashmap_{song['title']}_{song['artist']}"
-            table_name = table_name.replace(' ', '_')
+            table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
             
             
             match_count = Serializable().count_matching_hashes(table_name, hashmap)

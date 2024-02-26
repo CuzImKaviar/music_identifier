@@ -5,7 +5,7 @@
 SAMPLE_RATE = 44100
 """ File gets resampled to this sample rate """
 
-PEAK_BOX_SIZE = 50 #35
+PEAK_BOX_SIZE = 35 #35
 """ Size of the box for the maximum filter """
 
 POINT_EFFICIENCY = 0.8 #0.8
