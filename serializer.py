@@ -13,7 +13,7 @@ class Serializable(ABC):
         Create a table in the database.
         """
         table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
-        column_definitions = ', '.join([f"{column} TEXT" for column in columns])
+        column_definitions = ', '.join([f"{column}" for column in columns])
         create_table_query = f"CREATE TABLE IF NOT EXISTS {table_name} ({column_definitions})"
         self.cursor.execute(create_table_query)
         self.connection.commit()
@@ -87,8 +87,15 @@ class Serializable(ABC):
         """
         table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
         song_data = [(anchor_point, target_point) for anchor_point, target_point in song_data]
-        flat_song_data = [item for sublist in song_data for item in sublist]
-        placeholders = ', '.join(['(?, ?)' for _ in song_data])
-        query = f"SELECT COUNT(*) FROM {table_name} WHERE (anchor_point, target_point) IN ({placeholders})"
-        self.cursor.execute(query, flat_song_data)
-        return self.cursor.fetchone()[0]
+        match_count = 0
+        BATCH_SIZE = 16000  # Set the batch size to avoid exceeding SQLite's limit
+
+        for i in range(0, len(song_data), BATCH_SIZE):
+            batch = song_data[i:i + BATCH_SIZE]
+            flat_batch = [item for sublist in batch for item in sublist]
+            placeholders = ', '.join(['(?, ?)' for _ in batch])
+            query = f"SELECT COUNT(*) FROM {table_name} WHERE (HASH, Time_Delta) IN ({placeholders})"
+            self.cursor.execute(query, flat_batch)
+            match_count += self.cursor.fetchone()[0]
+
+        return match_count
