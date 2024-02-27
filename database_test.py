@@ -4,22 +4,35 @@ import numpy as np
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
-from scipy.ndimage import maximum_filter
 import settings as set
-from audio_process import process_audio 
-from audio_process import create_hashes_v1
+from audio_process import fingerprint_file
+from audio_process import plot_all, plot_waveform, plot_constellation_map, plot_filtered_spectrogram, plot_spectrogram
 from song import Song
 
 
-song_snipped = "C:\\Users\\sebba\\Downloads\\CantinaBand3.wav"
-fig, indices, times = process_audio(song_snipped)
-hashmap = create_hashes_v1(indices, times)
+song_snipped = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\3_Running_Up_That_Hill_instrumental.wav"
+hashes = fingerprint_file(song_snipped)
+#print(hashes)
+#song = Song("Running up that Hill", "GZUZ", hashes)
+#song.delete()
+#song.save()
+song = Song.identify(hashes)
+print(song)
 
+#fig_waveform, fig_spectrogram, fig_filtered_spectrogram, fig_constellation_map = plot_all(song_snipped, hashes)
+#fig_waveform.show()
+#fig_spectrogram.show()
+#fig_filtered_spectrogram.show()
+#fig_constellation_map.show()
 
+#fig = plot_waveform(song_snipped)
 
+#fig = plot_spectrogram(song_snipped)
 
-detected_song = Song.identify(hashmap)
-print(detected_song)
+#fig = plot_filtered_spectrogram(song_snipped)
+
+#fig = plot_constellation_map(song_snipped)
+#fig.show()
 
 '''
 audio = "C:\\Users\\sebba\\Downloads\\audio.mp3"

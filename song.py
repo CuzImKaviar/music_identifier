@@ -2,7 +2,9 @@ import sqlite3
 from database import DatabaseClient
 from serializer import Serializable
 import requests
+import numpy as np
 from urllib.parse import quote_plus
+from collections import defaultdict
 
 class Song(Serializable):
     
@@ -21,7 +23,7 @@ class Song(Serializable):
         
         self.serialize("songs", ["title", "artist"])
         table_name = f"Hashmap_{self.title}_{self.artist}"
-        self.serialize(table_name, ["anchor_point", "target_point", "delta_time", "time"], self.hashmap)
+        self.serialize(table_name, ["HASH INTEGER", "Time_Delta REAL"], self.hashmap)
     
         Serializable().close()
 
@@ -49,27 +51,6 @@ class Song(Serializable):
             formatted_songs.append(formatted_song)
         return formatted_songs
     
-    @classmethod
-    def identify(cls, hashmap):
-        """
-        Identify the song based on its hashmap.
-        """
-        all_songs = Serializable().deserialize("songs", ["title", "artist"])
-        best_match = None
-        best_match_count = 0
-        
-        for song in all_songs:
-            table_name = f"Hashmap_{song['title']}_{song['artist']}"
-            table_name = table_name.replace(' ', '_')
-            
-            
-            match_count = Serializable().count_matching_hashes(table_name, hashmap)
-            if match_count > best_match_count:
-                best_match = Song(song['title'], song['artist'], [])
-                best_match_count = match_count
-        print(F"Best match: {best_match}, with {best_match_count} matching hashes.")
-        return best_match
-
     def search_youtube_video(self):
         query = f"{self.title} {self.artist} official music video"
         url = f"https://www.youtube.com/results?search_query={quote_plus(query)}"
@@ -91,28 +72,88 @@ class Song(Serializable):
     def __repr__(self):
         return self.__str__()
     
+############################################################################################################
+    @staticmethod
+    def score_match(offset_dict):
+    
+        # Use bins spaced 0.5 seconds apart
+        binwidth = 0.5
+        offsets = []
+        for value in offset_dict:
+            offsets.extend(offset_dict[value])
 
+        tks = list(map(lambda x: x[0] - x[1], offsets))
+        hist, _ = np.histogram(tks,
+                            bins=np.arange(int(min(tks)),
+                                            int(max(tks)) + binwidth + 1,
+                                            binwidth))
+        return np.max(hist) if len(hist) > 0 else 0
+
+    @classmethod
+    def best_match(cls, matches):
+        matched_song = None
+        best_score = 0
+        for song_id, offsets in matches.items():
+            if len(offsets) < best_score:
+                continue
+            score = cls.score_match(offsets)
+            if score > best_score:
+                best_score = score
+                matched_song = song_id
+        return matched_song
+
+
+    @classmethod
+    def get_matches(cls, table_name, hashes):
+        h_dict = {}
+        for h, t in hashes:
+            h_dict[h] = t
+        in_values = f"({','.join([str(h[0]) for h in hashes])})"
+        query = f"SELECT HASH, Time_Delta FROM {table_name} WHERE HASH IN {in_values}"
+        
+        try:
+            results = Serializable().execute_query(query)
+        except Exception as e:
+            print(f"Error fetching results: {e}")
+
+        print(F"Results {table_name}: {len(results)}")
+        
+        result_dict = defaultdict(list)
+        
+        for r in results:
+            result_dict[table_name].append((r[1], h_dict[r[0]]))
+        print(F"Result dict {result_dict}")
+        return result_dict
+    
+
+    @classmethod
+    def identify(cls, hashmap):
+        all_songs = Serializable().deserialize("songs", ["title", "artist"])
+        matches = {}
+        
+        for song in all_songs:
+            table_name = f"Hashmap_{song['title']}_{song['artist']}"
+            table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
+            
+            # Get the matching hashes and their time deltas
+            matching_hashes = cls.get_matches(table_name, hashmap)
+            matches[song['title'], song['artist']] = matching_hashes
+            
+
+        best_match = cls.best_match(matches)
+        title, artist = best_match
+        best_match_song = Song(title, artist)
+        print(F"Best match: {best_match_song}, with {len(matches[best_match])} matching hashes.")
+        return best_match_song
+
+############################################################################################################
 
 if __name__ == "__main__":
-    """
-    import sqlite3
-
-    import numpy as np
-    import librosa
-    import librosa.display
-    import matplotlib.pyplot as plt
-    from scipy.ndimage import maximum_filter
-    import settings as set
-    from audio_process import process_audio 
-    from audio_process import create_hashes_v1
-
-    song_snipped = "C:\\Users\\sebba\\Downloads\\CantinaBand3.wav"
-    fig, indices, times = process_audio(song_snipped)
-    hashmap = create_hashes_v1(indices, times)
+    from audio_process import fingerprint_file
+    from serializer import Serializable
     
+    audio = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\8_Phlying_6020.wav"
     
-
-    detected_song = Song.identify(hashmap)
-    print(detected_song)
-    """
-    print(Serializable().deserialize("songs", ["title", "artist"]))
+    hashes = fingerprint_file(audio)
+    
+    detected_song = Song.identify(hashes)
