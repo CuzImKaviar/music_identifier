@@ -77,5 +77,3 @@ elif option == 'Microphone-based music recognition':
 
             st.write(detected_song)
             st.write("Kein passendes Video gefunden.")
-    else:
-        st.error("Song konnte nicht erkannt werden.")
