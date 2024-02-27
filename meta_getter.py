@@ -27,3 +27,11 @@ class Song_Metadata():
     
     def __repr__(self):
         return self.__str__()
+    
+if __name__ == "__main__":
+    query = f"Oxygène, Pt. 4 Jean-Michel Jarre official music video"
+    url = f"https://www.youtube.com/results?search_query={quote_plus(query)}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        print(response)
+    pass
