@@ -33,5 +33,5 @@ if __name__ == "__main__":
     url = f"https://www.youtube.com/results?search_query={quote_plus(query)}"
     response = requests.get(url)
     if response.status_code == 200:
-        print(response)
+        print(response.text)
     pass
