@@ -8,6 +8,16 @@ class Serializable(ABC):
         self.connection = sqlite3.connect(self.db_name)
         self.cursor = self.connection.cursor()
 
+    def execute_query(self, query: str, values: Tuple[Any, ...] = None) -> List[Tuple]:
+        """
+        Execute a query and return the results.
+        """
+        if values:
+            self.cursor.execute(query, values)
+        else:
+            self.cursor.execute(query)
+        return self.cursor.fetchall()
+
     def create_table(self, table_name, columns):
         """
         Create a table in the database.
@@ -81,21 +91,21 @@ class Serializable(ABC):
         """
         self.connection.close()
 
-    def count_matching_hashes(self, table_name, song_data):
-        """
-        Count the number of matching hashes in the given table.
-        """
-        table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
-        song_data = [(anchor_point, target_point) for anchor_point, target_point in song_data]
-        match_count = 0
-        BATCH_SIZE = 16000  # Set the batch size to avoid exceeding SQLite's limit
-
-        for i in range(0, len(song_data), BATCH_SIZE):
-            batch = song_data[i:i + BATCH_SIZE]
-            flat_batch = [item for sublist in batch for item in sublist]
-            placeholders = ', '.join(['(?, ?)' for _ in batch])
-            query = f"SELECT COUNT(*) FROM {table_name} WHERE (HASH, Time_Delta) IN ({placeholders})"
-            self.cursor.execute(query, flat_batch)
-            match_count += self.cursor.fetchone()[0]
-
-        return match_count
+#    def get_matching_hashes(self, table_name, song_data):
+#        """
+#        Get the matching hashes and their time deltas in the given table.
+#        """
+#        table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
+#        song_data = [(HASH, Time_Delta) for HASH, Time_Delta in song_data]
+#        matching_hashes = []
+#        BATCH_SIZE = 16000  # Set the batch size to avoid exceeding SQLite's limit
+#
+#        for i in range(0, len(song_data), BATCH_SIZE):
+#            batch = song_data[i:i + BATCH_SIZE]
+#            flat_batch = [item for sublist in batch for item in sublist]
+#            placeholders = ', '.join(['(?, ?)' for _ in batch])
+#            query = f"SELECT HASH, Time_Delta FROM {table_name} WHERE (HASH, Time_Delta) IN ({placeholders})"
+#            self.cursor.execute(query, flat_batch)
+#            matching_hashes.extend(self.cursor.fetchall())
+#
+#        return matching_hashes
