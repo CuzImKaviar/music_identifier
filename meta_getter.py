@@ -2,7 +2,7 @@ from serializer import Serializable
 import requests
 from urllib.parse import quote_plus
 from duckduckgo_search import DDGS
-from duckduckgo_search import AsyncDDGS
+# from duckduckgo_search import AsyncDDGS
 
 
 class Song_Metadata():
@@ -38,22 +38,26 @@ if __name__ == "__main__":
     # if response.status_code == 200:
     #     print(url)
 
-    from duckduckgo_search import DDGS
-
     with DDGS() as ddgs:
-        keywords = 'butterfly'
+        keywords = 'oxygen jean michel jarre Album Cover spotify'
         ddgs_images_gen = ddgs.images(
             keywords,
-            region="wt-wt",
+            region=None,
             safesearch="off",
             size=None,
-            color="Monochrome",
+            color=None,
             type_image=None,
             layout=None,
             license_image=None,
-            max_results=100,
+            max_results=5,
         )
         results = [r for r in ddgs_images_gen]
 
-    print(results)
+    for result in results:
+        print("\n\n")
+        for x in result:
+            print (x,':',result[x])
+
+
+    
     pass
