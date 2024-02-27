@@ -20,11 +20,11 @@ The programme includes the following basic implementations:
 * Uploaded music tracks can be played in the browser
 
 The programme also includes the following extensions:
-* Link to identified piece of music on Spotify/Youtube
-* Determine metadata for music tracks (artist, album, etc.)
-* Determine and display album cover of the music track with DuckDuckGo search API
-* plotting the waveform of the piece of music
-* Benchmarking of the application (duration of learning and identification)
+* Link to identified piece of music on Spotify/Youtube (+5%)
+* Determine metadata for music tracks (artist, album, etc.) (+5%)
+* Determine and display album cover of the music track with DuckDuckGo search API (+10%)
+* plotting the waveform of the piece of music (+20%)
+* Benchmarking of the application (duration of learning and identification) (+5%)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
