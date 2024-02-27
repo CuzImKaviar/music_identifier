@@ -55,14 +55,13 @@ if option == 'Upload file for music recognition':
 elif option == 'Microphone-based music recognition':
 
     with st.form("mic-based", clear_on_submit=True):
-        audio_bytes = audio_recorder(pause_threshold=5.0, sample_rate=41_000)
+        audio_bytes = audio_recorder(energy_threshold=(-1.0, 1.0), pause_threshold=5.0, sample_rate=41_000)
+        if audio_bytes:    
+            audio = st.audio(audio_bytes, format="audio/wav")
         submitted = st.form_submit_button("Song erkennen")
-    #len(audio_bytes) > 5 and 
     if submitted:
-        audio = st.audio(audio_bytes, format="audio/wav")
+        
         hashes = fingerprint_audio(audio_bytes)
-        #fig = plot_all(audio, hashes)
-        #st.pyplot(fig)
         detected_song = Song.identify(hashes)
 
         if detected_song:

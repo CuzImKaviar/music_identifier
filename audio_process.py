@@ -6,6 +6,8 @@ from scipy.ndimage import maximum_filter
 from scipy.signal import spectrogram
 import io
 import settings
+import wave
+import tempfile
 
 
 def file_to_spectrogram(filename):
@@ -112,22 +114,52 @@ def convert_bytes_to_frames(audio_bytes):
     frames = librosa.util.frame(audio_array, frame_length=nperseg, hop_length=hop_length)
     return frames.flatten()
 
-def fingerprint_audio(audio_bytes):
-    """Generate hashes for a series of audio frames.
-
-    Used when recording audio.
-
-    :param frames: A mono audio stream. Data type is any that ``scipy.signal.spectrogram`` accepts.
-    :returns: The output of :func:`hash_points`.
+def convert_bytes_to_wav(audio_bytes):
+    """Converts audio bytes to a temporary wav file. 
+    :param audio_bytes: The audio bytes.
+    :returns: The path to the temporary wav file.
     """
-    # convert audio bytes to frames
-    frames = convert_bytes_to_frames(audio_bytes)
-    
+    # Create a temporary file
+    temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
+
+    # Open the temporary file as a wav file
+    with wave.open(temp_file.name, 'wb') as wav_file:
+        # Set the parameters of the wav file
+        wav_file.setnchannels(1)  # mono
+        wav_file.setsampwidth(2)  # 2 bytes = 16 bits
+        wav_file.setframerate(settings.SAMPLE_RATE)  # sample rate
+
+        # Write the audio bytes to the wav file
+        wav_file.writeframes(audio_bytes)
+
+    # Return the path to the temporary wav file
+    return temp_file.name
+
+def fingerprint_audio(audio_bytes):
+
+
+    # convert audio bytes to temporary wav file
+    wav_file = convert_bytes_to_wav(audio_bytes)
+
     # create hash points
-    f, t, Sxx = spectrogram(frames)
-    peaks = find_peaks(Sxx)
-    peaks = idxs_to_tf_pairs(peaks, t, f)
-    return hash_points(peaks)
+    return fingerprint_file(wav_file)
+
+#def fingerprint_audio(audio_bytes):
+#    """Generate hashes for a series of audio frames.
+#
+#    Used when recording audio.
+#
+#    :param frames: A mono audio stream. Data type is any that ``scipy.signal.spectrogram`` accepts.
+#    :returns: The output of :func:`hash_points`.
+#    """
+#    # convert audio bytes to frames
+#    frames = convert_bytes_to_frames(audio_bytes)
+#    
+#    # create hash points
+#    f, t, Sxx = spectrogram(frames)
+#    peaks = find_peaks(Sxx)
+#    peaks = idxs_to_tf_pairs(peaks, t, f)
+#    return hash_points(peaks)
 
 
 def plot_waveform(filename):
