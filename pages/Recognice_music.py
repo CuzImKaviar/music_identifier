@@ -44,5 +44,3 @@ if audio and submitted:
             st.write("Kein passendes Video gefunden.")
     else:
         st.error("Song konnte nicht erkannt werden.")
-       
-
