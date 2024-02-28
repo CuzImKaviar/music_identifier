@@ -10,6 +10,9 @@ from audio_process import plot_all
 from song import Song
 import time
 import sqlite3
+from pydub import AudioSegment
+from io import BytesIO
+
 
 
 # -------------- SETTINGS --------------
@@ -20,12 +23,27 @@ layout = "centered"
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
 
+
+def mp3_to_wav(mp3_bytes):
+    audio = AudioSegment.from_mp3(BytesIO(mp3_bytes))
+    wav_bytes = audio.export(format="wav").read()
+    return wav_bytes
+
+
 with st.form("entry_form", clear_on_submit=True):
     # Datei hochladen
     song_name = st.text_input("Name des Songs", max_chars=64, placeholder="Name hier einfügen ...", key="Name")
     song_artist = st.text_input("Name des Künstlers", max_chars=64, placeholder="Künstler hier einfügen ...", key="Artist")
-    audio = st.file_uploader("Upload an audio file", type=["wav"])
+    audio = st.file_uploader("Upload an audio file", type=["mp3", "wav"])
+    
+    if audio is not None:
+        if audio.type == "audio/mp3":
+            mp3_data = audio.getvalue()
+            wav_data = mp3_to_wav(mp3_data)
+            audio = BytesIO(wav_data)
+        
     submitted = st.form_submit_button("Neuen Song speichern")
+
 
 if audio and submitted:
 
