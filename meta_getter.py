@@ -150,8 +150,8 @@ class Metadata():
 
 if __name__ == "__main__":
     
-    title = "Piano Man"
-    artist = "Billy Joel"
+    title = "Darkness at the Heart of My Love"
+    artist = "Ghost"
 
     song = Metadata(title, artist)
     song.print_infos()
