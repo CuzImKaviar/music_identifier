@@ -1,7 +1,6 @@
 from serializer import Serializable
 import requests
 from urllib.parse import quote_plus
-from duckduckgo_search import DDGS
 from ytmusicapi import YTMusic
 # from song import Song
 
