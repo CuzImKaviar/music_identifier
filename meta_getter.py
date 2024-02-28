@@ -66,5 +66,3 @@ if __name__ == "__main__":
 
     song = Song_Metadata(title, artist)
     song.print_infos()
-
-    pass
