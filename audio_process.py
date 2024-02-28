@@ -119,19 +119,14 @@ def convert_bytes_to_wav(audio_bytes):
     :param audio_bytes: The audio bytes.
     :returns: The path to the temporary wav file.
     """
+    print(audio_bytes)
     # Create a temporary file
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
 
     # Open the temporary file as a wav file
-    with wave.open(temp_file.name, 'wb') as wav_file:
-        # Set the parameters of the wav file
-        wav_file.setnchannels(1)  # mono
-        wav_file.setsampwidth(2)  # 2 bytes = 16 bits
-        wav_file.setframerate(settings.SAMPLE_RATE)  # sample rate
-
-        # Write the audio bytes to the wav file
-        wav_file.writeframes(audio_bytes)
-
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
+    # Schreibe den Inhalt in das temporäre Dateiobjekt
+        temp_file.write(audio_bytes)
     # Return the path to the temporary wav file
     return temp_file.name
 
