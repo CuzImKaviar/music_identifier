@@ -16,21 +16,6 @@ class Song_Metadata():
         self.duration = "dummy"
         self.cover = "dummy"
 
-
-    def search_youtube_video(self):
-        query = f"{self.title} {self.artist} official music video"
-        url = f"https://www.youtube.com/results?search_query={quote_plus(query)}"
-        response = requests.get(url)
-        if response.status_code == 200:
-            video_id = None
-            start_index = response.text.find('{"videoRenderer":{"videoId":"')
-            if start_index != -1:
-                end_index = response.text.find('"', start_index + 30)
-                video_id = response.text[start_index + 29:end_index]
-            if video_id:
-                return f"https://www.youtube.com/watch?v={video_id}"
-        return None
-
     @classmethod
     def get_metadata(cls, title : str, artist : str):
         '''
@@ -46,16 +31,19 @@ class Song_Metadata():
             limit=20
         )
 
-        result = next((r for r in results if title.lower() in r['title'].lower()), None)
+        song = next((r for r in results if title.lower() in r['title'].lower()), None)
+        album = cls.ytmusic.get_album(song['album']['id'])
+        songinfo = cls.ytmusic.get_song(song['videoId'])['videoDetails']
 
-
-
-        return cls.ytmusic.get_album(result['album']['id'])
-        # return {
-        #     'album': result['album']['name'],
-        #     'album_id': result['album']['id'],
-        #     'song_id': result['videoId'],
-        #     'duration': result['duration']}
+        return {
+            'album': song['album']['name'],
+            'album_id': song['album']['id'],
+            'song_id': song['videoId'],
+            'duration': song['duration'],
+            'year': album['year'],
+            'viewCount' : songinfo['viewCount'],
+            'cover': songinfo['thumbnail']['thumbnails'][-1]['url']
+            }
 
     def __str__(self):
         return f"{self.title} by {self.artist}"
@@ -64,32 +52,12 @@ class Song_Metadata():
         return self.__str__()
     
 if __name__ == "__main__":
-    import json
     
-    title = "Victory Over Truth"
-    artist = "Fox Stevenson"
+    title = "Ghost Division"
+    artist = "Sabaton"
 
-    # result = Song_Metadata.get_metadata(title, artist)
-
-    query = f"{title} {artist}" if artist else title
-
-    ytmusic = YTMusic()
-    results = ytmusic.search(
-        query,
-        filter="songs",
-        scope=None,
-        limit=20
-    )
-
-    result1 = next((r for r in results if title.lower() in r['title'].lower()), None)
-
-    print(result1['album']['id'])
-    result = ytmusic.get_album(result1['album']['id'])
-    # for result in results:
-    #     print('\n')
+    result = Song_Metadata.get_metadata(title, artist)
     for x in result:
         print (x,':',result[x])
-
-    # print(json.dumps(result, indent=4))
 
     pass
