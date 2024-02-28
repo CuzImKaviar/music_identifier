@@ -10,10 +10,13 @@ class Metadata():
     ytmusic = YTMusic()
     
     def __init__(self, title, artist):
+        
+        data = Metadata.get_metadata(title, artist)
+        ytm_url = Metadata.get_YouTubeMusic(data['song_id'], data['album'], artist)
+        sptfy_url = Metadata.get_Spotify(title, data['album'], artist)
+
         self.title = title
         self.artist = artist
-
-        data = Metadata.get_metadata(self.title, self.artist)
 
         self.album = data['album']
         self.duration = data['duration']
@@ -21,8 +24,11 @@ class Metadata():
         self.viewCount = data['viewCount']
         self.cover = data['cover']
 
-        self.album_id = data['album_id']
-        self.song_id = data['song_id']
+        self.song_url_YTM = ytm_url['song']
+        self.album_url_YTM = ytm_url['album']
+
+        self.song_url_sptfy = sptfy_url['song']
+        self.album_url_sptfy = sptfy_url['album']
     
     def print_infos(self) -> None:
         attrs = vars(self)
@@ -51,7 +57,6 @@ class Metadata():
 
         return {
             'album': song['album']['name'],
-            'album_id': song['album']['id'],
             'song_id': song['videoId'],
             'duration': song['duration'],
             'year': album['year'],
@@ -86,7 +91,7 @@ class Metadata():
         )
 
         album_url = Metadata.get_url(
-            keywords=f"{album} {artist} YouTubeMusic" if artist else album,
+            keywords=f"{album} {artist} YouTubeMusic" if artist else f"{album} YouTubeMusic",
             url_start="https://music.youtube.com/playlist"
         )
 
@@ -95,51 +100,28 @@ class Metadata():
             'album':  album_url
         }
 
-    # @staticmethod
-    # def get_YTM_Song(song_id : str) -> str:
-    #     '''
-    #     Returns the URL for the Song on Youtube Music by adding the song_id as a Youtube Music URL as an 
-    #     '''
-
-    #     # namedtuple to match the internal signature of urlunparse
-    #     Components = namedtuple(
-    #         typename='Components', 
-    #         field_names=['scheme', 'netloc', 'path', 'params', 'query', 'fragment']
-    #     )
-
-    #     song_url =  urlunparse(
-    #         Components(
-    #             scheme='https',
-    #             netloc='music.youtube.com',
-    #             path='/watch',
-    #             params='',
-    #             query=urlencode({'v': song_id}),
-    #             fragment=''
-    #         )
-    #     )
-
-    #     return song_url
-
-    # @staticmethod
-    # def get_YTM_Album(album : str, artist : str = None) -> str:
-
-    #     keywords = f"{album} {artist} YouTubeMusic" if artist else title
-    
-    #     results = DDGS().text(
-    #         keywords,
-    #         region=None,
-    #         safesearch='off',
-    #         timelimit=None,
-    #         backend="api",
-    #         max_results=10)
-        
-    #     url = next((r['href'] for r in results if r['href'].startswith("https://music.youtube.com/playlist")), None)
-
-    #     return url
-
     @staticmethod
     def get_Spotify(title : str, album : str, artist : str = None) -> Dict[str, str]:
-        return
+        '''
+        Returns the URL for the Song and its Album on Spotify.
+
+        The song and the album URLs are recived by searching online with the DuckDuckGo API for the song and the album.
+        '''
+
+        song_url = Metadata.get_url(
+            keywords=f"{title} {artist} Spotify" if artist else f"{title} Spotify",
+            url_start="https://open.spotify.com/track/"
+        )
+        
+        album_url = Metadata.get_url(
+            keywords=f"{album} {artist} Spotify" if artist else f"{album} Spotify",
+            url_start="https://open.spotify.com/album/"
+        )
+
+        return {
+            'song':  song_url,
+            'album':  album_url
+        }
 
     @staticmethod
     def get_url(keywords : str, url_start : str = None) -> str:
@@ -164,31 +146,12 @@ class Metadata():
     
     def __repr__(self):
         return self.__str__()
-    
+
+
 if __name__ == "__main__":
     
-    title = "Ghost Division"
-    artist = "Sabaton"
-    album = "The Art of War (Re-Armed)"
+    title = "Piano Man"
+    artist = "Billy Joel"
 
-    # song = Metadata(title, artist)
-    # song.print_infos()
-
-    # print('\n')
-    # print(f"URL: {Metadata.get_YouTubeMusic(song.song_id, song.album)}")
-
-    keywords = f"{album} {artist} Spotify" if artist else title
-    
-    results = DDGS().text(
-        keywords,
-        region=None,
-        safesearch='off',
-        timelimit=None,
-        backend="api",
-        max_results=10)
-
-    for result in results:
-        print('\n')
-        for x in result:
-            print (x,':',result[x])
-    
+    song = Metadata(title, artist)
+    song.print_infos()
