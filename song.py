@@ -102,7 +102,7 @@ class Song(Serializable):
         for song_id, offsets in matches.items():
             print(F"Song ID: {song_id}")
             print(F"Offset_dict: {offsets}")
-            if not offsets or len(offsets) < best_score:
+            if not offsets:
                 continue
             score = cls.score_match(offsets)
             if score > best_score:
