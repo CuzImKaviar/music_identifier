@@ -78,15 +78,21 @@ class Song(Serializable):
     
         # Use bins spaced 0.5 seconds apart
         binwidth = 0.5
-        offsets = []
-        for value in offset_dict:
-            offsets.extend(offset_dict[value])
+        offsets = list(offset_dict.values())[0]
+
+        print(F"Offsets: {offset_dict}")
 
         tks = list(map(lambda x: x[0] - x[1], offsets))
+        if len(tks) == 0:
+            return 0
+        print(F"tks: {tks}")
+
         hist, _ = np.histogram(tks,
                             bins=np.arange(int(min(tks)),
                                             int(max(tks)) + binwidth + 1,
                                             binwidth))
+        print (F"max_hist = {np.max(hist) if len(hist) > 0 else print("0")}")
+
         return np.max(hist) if len(hist) > 0 else 0
 
     @classmethod
@@ -94,7 +100,9 @@ class Song(Serializable):
         matched_song = None
         best_score = 0
         for song_id, offsets in matches.items():
-            if len(offsets) < best_score:
+            print(F"Song ID: {song_id}")
+            print(F"Offset_dict: {offsets}")
+            if not offsets or len(offsets) < best_score:
                 continue
             score = cls.score_match(offsets)
             if score > best_score:
@@ -152,8 +160,11 @@ if __name__ == "__main__":
     from audio_process import fingerprint_file
     from serializer import Serializable
     
-    audio = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\8_Phlying_6020.wav"
+    audio = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\3_Welcome_to_The_Internet.wav"
     
     hashes = fingerprint_file(audio)
-    
+    #song = Song("6020", "Phlying")
+    #song.delete()
+    #matches = Song.get_matches("Hashmap_Welcome_To_The_Internet_Bo_Burnham", hashes)
+    #best_match = Song.best_match(matches)
     detected_song = Song.identify(hashes)
