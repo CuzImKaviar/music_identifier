@@ -1,9 +1,5 @@
-from serializer import Serializable
-import requests
-from urllib.parse import quote_plus
 from ytmusicapi import YTMusic
 # from song import Song
-
 
 class Song_Metadata():
     ytmusic = YTMusic()
@@ -11,15 +7,27 @@ class Song_Metadata():
     def __init__(self, title, artist):
         self.title = title
         self.artist = artist
-        self.album = "dummy"
-        self.date = "dummy"
-        self.duration = "dummy"
-        self.cover = "dummy"
 
+        data = Song_Metadata.get_metadata(self.title, self.artist)
+
+        self.album = data['album']
+        self.album_id = data['album_id']
+        self.song_id = data['song_id']
+        self.duration = data['duration']
+        self.year = data['year']
+        self.viewCount = data['viewCount']
+        self.cover = data['cover']
+    
+    def print_infos(self):
+        attrs = vars(song)
+        print('\n'.join("%s: %s" % item for item in attrs.items()))
+        
     @classmethod
     def get_metadata(cls, title : str, artist : str):
         '''
-        Findes a Song
+        Findes a song using a unofficial API for YouTube Music and returns relevant meta data for the song
+
+        For more infos about the API see https://ytmusicapi.readthedocs.io/en/stable/index.html 
         '''
 
         query = f"{title} {artist}" if artist else title
@@ -56,8 +64,7 @@ if __name__ == "__main__":
     title = "Ghost Division"
     artist = "Sabaton"
 
-    result = Song_Metadata.get_metadata(title, artist)
-    for x in result:
-        print (x,':',result[x])
+    song = Song_Metadata(title, artist)
+    song.print_infos()
 
     pass
