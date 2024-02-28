@@ -103,16 +103,6 @@ def fingerprint_file(filename):
     peaks = idxs_to_tf_pairs(peaks, t, f)
     return hash_points(peaks)
 
-def convert_bytes_to_frames(audio_bytes):
-    """Converts audio bytes to frames. 
-    :param audio_bytes: The audio bytes.
-    :returns: The frames.
-    """
-    nperseg = int(settings.SAMPLE_RATE * settings.FFT_WINDOW_SIZE)
-    hop_length = nperseg // 4
-    audio_array, _ = librosa.load(io.BytesIO(audio_bytes), sr=settings.SAMPLE_RATE, dtype=np.float32)
-    frames = librosa.util.frame(audio_array, frame_length=nperseg, hop_length=hop_length)
-    return frames.flatten()
 
 def convert_bytes_to_wav(audio_bytes):
     """Converts audio bytes to a temporary wav file. 
@@ -130,31 +120,14 @@ def convert_bytes_to_wav(audio_bytes):
     # Return the path to the temporary wav file
     return temp_file.name
 
+
 def fingerprint_audio(audio_bytes):
-
-
+    """Generate hashes for audio bytes."""
     # convert audio bytes to temporary wav file
     wav_file = convert_bytes_to_wav(audio_bytes)
 
     # create hash points
     return fingerprint_file(wav_file)
-
-#def fingerprint_audio(audio_bytes):
-#    """Generate hashes for a series of audio frames.
-#
-#    Used when recording audio.
-#
-#    :param frames: A mono audio stream. Data type is any that ``scipy.signal.spectrogram`` accepts.
-#    :returns: The output of :func:`hash_points`.
-#    """
-#    # convert audio bytes to frames
-#    frames = convert_bytes_to_frames(audio_bytes)
-#    
-#    # create hash points
-#    f, t, Sxx = spectrogram(frames)
-#    peaks = find_peaks(Sxx)
-#    peaks = idxs_to_tf_pairs(peaks, t, f)
-#    return hash_points(peaks)
 
 
 def plot_waveform(filename):
