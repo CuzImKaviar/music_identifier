@@ -67,15 +67,17 @@ elif option == 'Microphone-based music recognition':
             detected_song = Song.identify(hashes)
 
             if detected_song:
-                video_link = detected_song.search_youtube_video()
-                if video_link:
-                    st.video(video_link)
-                    st.write(detected_song)
-                    st.write("YouTube Video Link:", video_link)
-                else:
-                    st.write(detected_song)
-                    st.write("Kein passendes Video gefunden.")
-            else:
-                st.error("Song konnte nicht erkannt werden.")
+                try:
+                    video_link = detected_song.search_youtube_video()
+                    if video_link:
+                        try:
+                            st.video(video_link)
+                            st.write(detected_song)
+                            st.write("YouTube Video Link:", video_link)
+                        except Exception as e:
+                            st.write(detected_song)
+                            st.write("Kein passendes Video gefunden.") 
+                except Exception as e:
+                    st.error("Song konnte nicht erkannt werden.")
         except Exception as e:
             st.error(f"Fehler beim Erkennen des Songs: {e}")
