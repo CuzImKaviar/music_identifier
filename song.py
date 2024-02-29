@@ -5,6 +5,8 @@ import requests
 import numpy as np
 from urllib.parse import quote_plus
 from collections import defaultdict
+from pydub import AudioSegment
+from io import BytesIO
 
 class Song(Serializable):
     
@@ -64,6 +66,14 @@ class Song(Serializable):
             if video_id:
                 return f"https://www.youtube.com/watch?v={video_id}"
         return None
+
+    @classmethod
+    def mp3_to_wav(cls, audio):
+        mp3_bytes = audio.getvalue()
+        audio = AudioSegment.from_mp3(BytesIO(mp3_bytes))
+        wav_bytes = audio.export(format="wav").read()
+        audio_wav = BytesIO(wav_bytes)
+        return audio_wav
 
 
     def __str__(self):
