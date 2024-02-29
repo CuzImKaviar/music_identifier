@@ -1,12 +1,9 @@
 import matplotlib.pyplot as plt
-import uuid
 import numpy as np
 import librosa
 from scipy.ndimage import maximum_filter
 from scipy.signal import spectrogram
-import io
 import settings
-import wave
 import tempfile
 
 
@@ -109,13 +106,11 @@ def convert_bytes_to_wav(audio_bytes):
     :param audio_bytes: The audio bytes.
     :returns: The path to the temporary wav file.
     """
-    print(audio_bytes)
     # Create a temporary file
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
 
     # Open the temporary file as a wav file
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
-    # Schreibe den Inhalt in das temporäre Dateiobjekt
         temp_file.write(audio_bytes)
     # Return the path to the temporary wav file
     return temp_file.name
@@ -129,9 +124,16 @@ def fingerprint_audio(audio_bytes):
     # create hash points
     return fingerprint_file(wav_file)
 
+#----------------- PLOT FUNCTIONS -----------------#
+# Create a temporary file used for plotting audio from streamlit
+def create_tempfile(audio):
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmpfile:
+        tmpfile.write(audio.getvalue())
+        tmpfile_name = tmpfile.name
+    return tmpfile_name
 
-def plot_waveform(filename):
-    y, sr = librosa.load(filename)
+def plot_waveform(audio):
+    y, sr = librosa.load(audio)
     fig, ax = plt.subplots(figsize=(10, 4))
     t = np.arange(len(y)) / sr
     t_min_sec = ["%02d:%02d" % (m, s) for m, s in zip(t // 60, t % 60)]
@@ -222,3 +224,10 @@ def plot_all(filename):
     axs[3].imshow(fig_constellation_map)
 
     return fig
+
+
+if __name__ == "__main__":
+    audio = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\Never_Gonna_Give_You_Up.wav"
+    fig = plot_waveform(audio)
+    plt.show()
+    

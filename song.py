@@ -5,6 +5,9 @@ import requests
 import numpy as np
 from urllib.parse import quote_plus
 from collections import defaultdict
+from pydub import AudioSegment
+from io import BytesIO
+from settings import MIN_SCORE
 
 class Song(Serializable):
     
@@ -65,6 +68,14 @@ class Song(Serializable):
                 return f"https://www.youtube.com/watch?v={video_id}"
         return None
 
+    @classmethod
+    def mp3_to_wav(cls, audio):
+        mp3_bytes = audio.getvalue()
+        audio = AudioSegment.from_mp3(BytesIO(mp3_bytes))
+        wav_bytes = audio.export(format="wav").read()
+        audio_wav = BytesIO(wav_bytes)
+        return audio_wav
+
 
     def __str__(self):
         return f"{self.title} by {self.artist}"
@@ -80,28 +91,22 @@ class Song(Serializable):
         binwidth = 0.5
         offsets = list(offset_dict.values())[0]
 
-        print(F"Offsets: {offset_dict}")
-
         tks = list(map(lambda x: x[0] - x[1], offsets))
         if len(tks) == 0:
             return 0
-        print(F"tks: {tks}")
 
         hist, _ = np.histogram(tks,
                             bins=np.arange(int(min(tks)),
                                             int(max(tks)) + binwidth + 1,
                                             binwidth))
-        print (F"max_hist = {np.max(hist) if len(hist) > 0 else print("0")}")
 
-        return np.max(hist) if len(hist) > 0 else 0
+        return np.max(hist) if len(hist) > 0 and np.max(hist) > MIN_SCORE else 0
 
     @classmethod
     def best_match(cls, matches):
         matched_song = None
         best_score = 0
         for song_id, offsets in matches.items():
-            print(F"Song ID: {song_id}")
-            print(F"Offset_dict: {offsets}")
             if not offsets:
                 continue
             score = cls.score_match(offsets)
@@ -119,18 +124,11 @@ class Song(Serializable):
         in_values = f"({','.join([str(h[0]) for h in hashes])})"
         query = f"SELECT HASH, Time_Delta FROM {table_name} WHERE HASH IN {in_values}"
         
-        try:
-            results = Serializable().execute_query(query)
-        except Exception as e:
-            print(f"Error fetching results: {e}")
-
-        print(F"Results {table_name}: {len(results)}")
-        
+        results = Serializable().execute_query(query)
         result_dict = defaultdict(list)
         
         for r in results:
             result_dict[table_name].append((r[1], h_dict[r[0]]))
-        print(F"Result dict {result_dict}")
         return result_dict
     
 
@@ -151,7 +149,7 @@ class Song(Serializable):
         best_match = cls.best_match(matches)
         title, artist = best_match
         best_match_song = Song(title, artist)
-        print(F"Best match: {best_match_song}, with {len(matches[best_match])} matching hashes.")
+        print(F"Best match: {best_match_song}.")
         return best_match_song
 
 ############################################################################################################

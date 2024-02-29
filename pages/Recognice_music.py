@@ -12,6 +12,7 @@ from audio_recorder_streamlit import audio_recorder
 from song import Song
 from meta_getter import Metadata
 
+
 def display_detected_Song(detected_song : Song) -> None:
 
     if detected_song:
@@ -60,38 +61,47 @@ st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
 
 option = st.radio(
-    'Wählen Sie eine Option:',
+    'Choose an option:',
     ('Upload file for music recognition', 'Microphone-based music recognition'))
 
 if option == 'Upload file for music recognition':
 
-    with st.form("mic-based", clear_on_submit=True):
+    with st.form("file-based", clear_on_submit=True):
         audio = st.file_uploader("Upload an audio clip", type=["mp3", "wav"])
-        submitted = st.form_submit_button("Song erkennen")
+        submitted = st.form_submit_button("Recognize song")
 
     if submitted:
-        if audio: 
-            hashes = fingerprint_file(audio)
-            detected_song = Song.identify(hashes)
+        try:
+            if audio: 
+                hashes = fingerprint_file(audio)
+                detected_song = Song.identify(hashes)
 
-            display_detected_Song(detected_song)
-        else:
-            st.error("No File selected!")
+                display_detected_Song(detected_song)
+            else:
+                st.error("No File selected!")
+                
+        except Exception as e:
+            st.error(f"Error recognizing the song: {e}")
 
 elif option == 'Microphone-based music recognition':
 
     with st.container(border=True):
         audio_bytes = audio_recorder(energy_threshold=(-1.0, 1.0), pause_threshold=6.0, sample_rate=41_000)
+
         with st.form("mic-based", clear_on_submit=False, border=False):
             if audio_bytes:
                 audio = st.audio(audio_bytes, format="audio/wav")
             submitted = st.form_submit_button("Song erkennen")
     
     if submitted:
-        if audio_bytes:
-            hashes = fingerprint_audio(audio_bytes)
-            detected_song = Song.identify(hashes)
+        try:
+            if audio_bytes:
+                hashes = fingerprint_audio(audio_bytes)
+                detected_song = Song.identify(hashes)
 
-            display_detected_Song(detected_song)
-        else:
-            st.error("No Sound Recorded!")
+                display_detected_Song(detected_song)
+            else:
+                st.error("No Sound Recorded!")
+                
+        except Exception as e:
+            st.error(f"Error recognizing the song: {e}")
