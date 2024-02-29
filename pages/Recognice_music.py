@@ -30,26 +30,28 @@ option = st.radio(
 
 if option == 'Upload file for music recognition':
 
-    with st.form("mic-based", clear_on_submit=True):
+    with st.form("file-based", clear_on_submit=True):
         audio = st.file_uploader("Upload an audio clip", type=["mp3", "wav"])
         submitted = st.form_submit_button("Song erkennen")
 
     if audio and submitted:
-        hashes = fingerprint_file(audio)
-        detected_song = Song.identify(hashes)
+        try:
+            hashes = fingerprint_file(audio)
+            detected_song = Song.identify(hashes)
 
-        if detected_song:
-            video_link = detected_song.search_youtube_video()
-            if video_link:
-                st.video(video_link)
-                st.write(detected_song)
-                st.write("YouTube Video Link:", video_link)
+            if detected_song:
+                video_link = detected_song.search_youtube_video()
+                if video_link:
+                    st.video(video_link)
+                    st.write(detected_song)
+                    st.write("YouTube Video Link:", video_link)
+                else:
+                    st.write(detected_song)
+                    st.write("Kein passendes Video gefunden.")
             else:
-                st.write(detected_song)
-                st.write("Kein passendes Video gefunden.")
-        else:
-
-            st.error("Song konnte nicht erkannt werden.")
+                st.error("Song konnte nicht erkannt werden.")
+        except Exception as e:
+            st.error(f"Fehler beim Erkennen des Songs: {e}")
 
 elif option == 'Microphone-based music recognition':
 
@@ -58,22 +60,22 @@ elif option == 'Microphone-based music recognition':
         if audio_bytes:   
             audio = st.audio(audio_bytes, format="audio/wav")
         submitted = st.form_submit_button("Song erkennen")
-    if submitted:
         
-        hashes = fingerprint_audio(audio_bytes)
-        detected_song = Song.identify(hashes)
+    if submitted:
+        try:
+            hashes = fingerprint_audio(audio_bytes)
+            detected_song = Song.identify(hashes)
 
-        if detected_song:
-            video_link = detected_song.search_youtube_video()
-            if video_link:
-                st.video(video_link)
-                st.write(detected_song)
-                st.write("YouTube Video Link:", video_link)
+            if detected_song:
+                video_link = detected_song.search_youtube_video()
+                if video_link:
+                    st.video(video_link)
+                    st.write(detected_song)
+                    st.write("YouTube Video Link:", video_link)
+                else:
+                    st.write(detected_song)
+                    st.write("Kein passendes Video gefunden.")
             else:
-                st.write(detected_song)
-                st.write("Kein passendes Video gefunden.")
-        else:
-            st.error("Song konnte nicht erkannt werden.")
-
-            st.write(detected_song)
-            st.write("Kein passendes Video gefunden.")
+                st.error("Song konnte nicht erkannt werden.")
+        except Exception as e:
+            st.error(f"Fehler beim Erkennen des Songs: {e}")
