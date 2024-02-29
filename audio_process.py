@@ -1,5 +1,4 @@
 import matplotlib.pyplot as plt
-import uuid
 import numpy as np
 import librosa
 from scipy.ndimage import maximum_filter
@@ -126,9 +125,17 @@ def fingerprint_audio(audio_bytes):
     # create hash points
     return fingerprint_file(wav_file)
 
+#----------------- PLOT FUNCTIONS -----------------#
+# create a temporary file used for plotting audio from streamlit
+def create_tempfile(audio):
+    # Create a temporary file
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmpfile:
+        tmpfile.write(audio.getvalue())
+        tmpfile_name = tmpfile.name
+    return tmpfile_name
 
-def plot_waveform(filename):
-    y, sr = librosa.load(filename)
+def plot_waveform(audio):
+    y, sr = librosa.load(audio)
     fig, ax = plt.subplots(figsize=(10, 4))
     t = np.arange(len(y)) / sr
     t_min_sec = ["%02d:%02d" % (m, s) for m, s in zip(t // 60, t % 60)]
@@ -223,12 +230,6 @@ def plot_all(filename):
 
 if __name__ == "__main__":
     audio = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\Never_Gonna_Give_You_Up.wav"
-    #fig = plot_all(audio)
-    #plt.show()
-    hashes = fingerprint_file(audio)
-    sorted_hashes = sorted(hashes, key=lambda hash_info: hash_info[1])
-
-    for hash_info in sorted_hashes:
-        hash, anchor_time_offset = hash_info
-        seconds = anchor_time_offset
-        print(f"Hash: {hash}, Time Offset: {seconds} seconds")
+    fig = plot_waveform(audio)
+    plt.show()
+    
