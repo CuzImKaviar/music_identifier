@@ -4,15 +4,16 @@ from duckduckgo_search import DDGS
 from collections import namedtuple
 from urllib.parse import urlencode, urlunparse
 
-# from song import Song
-
 class Metadata():
     ytmusic = YTMusic()
     
     def __init__(self, title, artist):
-        
+
+        print("Getting metadata from YouTube Music...")
         data = Metadata.get_metadata(title, artist)
+        print("Getting URLS for YouTube Music...")
         ytm_url = Metadata.get_YouTubeMusic(data['song_id'], data['album'], artist)
+        print("Getting URLS for Spotify...")
         sptfy_url = Metadata.get_Spotify(title, data['album'], artist)
 
         self.title = title
@@ -29,10 +30,12 @@ class Metadata():
 
         self.song_url_sptfy = sptfy_url['song']
         self.album_url_sptfy = sptfy_url['album']
+
+        print("Finised getting metadata.")
     
     def print_infos(self) -> None:
         attrs = vars(self)
-        print('\n'.join("%s: %s" % item for item in attrs.items()))
+        return '\n'.join("%s: %s" % item for item in attrs.items())
         
     @classmethod
     def get_metadata(cls, title : str, artist : str = None) -> Dict[str, str]:
@@ -44,6 +47,7 @@ class Metadata():
 
         query = f"{title} {artist}" if artist else title
 
+        print("Searching Song on YouTube Music...")
         results = cls.ytmusic.search(
             query,
             filter="songs",
@@ -51,8 +55,11 @@ class Metadata():
             limit=20
         )
 
+        print("Filter search results...")
         song = next((r for r in results if title.lower() in r['title'].lower()), None)
+        print("Getting Album infos from YouTube Music...")
         album = cls.ytmusic.get_album(song['album']['id'])
+        print("Getting Song infos from YouTube Music...")
         songinfo = cls.ytmusic.get_song(song['videoId'])['videoDetails']
 
         return {
@@ -79,6 +86,7 @@ class Metadata():
             field_names=['scheme', 'netloc', 'path', 'params', 'query', 'fragment']
         )
 
+        print("Generating YouTube Music song URL...")
         song_url =  urlunparse(
             Components(
                 scheme='https',
@@ -89,7 +97,8 @@ class Metadata():
                 fragment=''
             )
         )
-
+        
+        print("Getting YouTube Music Album URL...")
         album_url = Metadata.get_url(
             keywords=f"{album} {artist} YouTubeMusic" if artist else f"{album} YouTubeMusic",
             url_start="https://music.youtube.com/playlist"
@@ -108,11 +117,13 @@ class Metadata():
         The song and the album URLs are recived by searching online with the DuckDuckGo API for the song and the album.
         '''
 
+        print("Getting Spotify Song URL...")
         song_url = Metadata.get_url(
             keywords=f"{title} {artist} Spotify" if artist else f"{title} Spotify",
             url_start="https://open.spotify.com/track/"
         )
         
+        print("Getting Spotify Album URL...")
         album_url = Metadata.get_url(
             keywords=f"{album} {artist} Spotify" if artist else f"{album} Spotify",
             url_start="https://open.spotify.com/album/"
@@ -129,6 +140,7 @@ class Metadata():
         Searches online with the DuckDuckGo Search API for the providet keywords and returns the first URL which starts with the url_start strin
         '''
         
+        print("Searching for URLs...")
         results = DDGS().text(
             keywords,
             region=None,
@@ -137,6 +149,7 @@ class Metadata():
             backend="api",
             max_results=10)
         
+        print("Filtering for URLs...")
         url = next((r['href'] for r in results if r['href'].startswith(url_start)), None) if url_start else results[0]['href']
 
         return url
@@ -154,4 +167,4 @@ if __name__ == "__main__":
     artist = "Ghost"
 
     song = Metadata(title, artist)
-    song.print_infos()
+    print(song.print_infos())
