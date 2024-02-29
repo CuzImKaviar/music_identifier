@@ -109,7 +109,6 @@ def convert_bytes_to_wav(audio_bytes):
     :param audio_bytes: The audio bytes.
     :returns: The path to the temporary wav file.
     """
-    print(audio_bytes)
     # Create a temporary file
     temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".wav")
 
