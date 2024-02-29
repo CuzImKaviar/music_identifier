@@ -32,7 +32,7 @@ with st.form("delete_form", clear_on_submit=True):
             title, artist = song_to_delete.split(" by ")
             song = Song(title, artist, [])
             song.delete()
-            st.session_state["success"] = f"{title} was successfully deleted!"
+            st.session_state["success"] = f"{title} by {artist} was successfully deleted!"
             st.rerun()
         except Exception as e:
             st.write(f"Error deleting {song_to_delete}: {e}")
