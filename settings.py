@@ -1,5 +1,5 @@
 """ Settings file for the application """
-
+import warnings
 
 SAMPLE_RATE = 44100
 """ File gets resampled to this sample rate """
@@ -24,3 +24,7 @@ FFT_WINDOW_SIZE = 0.2
 
 MIN_SCORE = 10
 """ Minimum score for a match """
+
+def ignore_warnings_pydub():
+    """ Ignore warnings from pydub """
+    warnings.filterwarnings("ignore", category=RuntimeWarning, module="pydub")

@@ -1,6 +1,10 @@
 import streamlit as st
+from settings import ignore_warnings_pydub
 
-# --- Home Page ---
+# -------------- Ignore warnings from pydub --------------
+ignore_warnings_pydub()
+
+# -------------- Home Page --------------
 page_title = "Shazam clone"
 page_icon = ":house:"  # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 layout = "centered"
