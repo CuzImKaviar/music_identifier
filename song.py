@@ -103,7 +103,7 @@ class Song(Serializable):
                                             binwidth))
         print (F"max_hist = {np.max(hist) if len(hist) > 0 else print("0")}")
 
-        return np.max(hist) if len(hist) > 0 else 0
+        return np.max(hist) if len(hist) > 10 else 0
 
     @classmethod
     def best_match(cls, matches):
