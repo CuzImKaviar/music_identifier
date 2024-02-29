@@ -14,11 +14,16 @@ st.title(page_title + " " + page_icon)
 all_songs = Song.get_all_songs()    
 
 with st.form("delete_form", clear_on_submit=True):
-    song_to_delete = st.selectbox('Song auswählen',options = all_songs, key="title")
+    song_to_delete = st.selectbox('Song auswählen', options=all_songs, key="title")
 
     submitted = st.form_submit_button("Titel löschen")
     if submitted:
-        title, artist = song_to_delete.split(" by ")
-        song = Song(title, artist, [])
-        song.delete()
+        try:
+            title, artist = song_to_delete.split(" by ")
+            song = Song(title, artist, [])
+            song.delete()
+            st.write(f"{title} wurde erfolgreich gelöscht!")
+        except Exception as e:
+            st.write(f"Fehler beim Löschen von {song_to_delete}: {e}")
+
         
