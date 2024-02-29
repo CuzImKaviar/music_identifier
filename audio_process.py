@@ -222,3 +222,9 @@ def plot_all(filename):
     axs[3].imshow(fig_constellation_map)
 
     return fig
+
+
+if __name__ == "__main__":
+    audio = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\Never_Gonna_Give_You_Up.wav"
+    fig = plot_all(audio)
+    plt.show()
