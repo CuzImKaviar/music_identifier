@@ -78,7 +78,7 @@ As this programme is only a mockup, the corresponding programming environment mu
 * Install all required libraries with  
 ```pip install -r requirements.txt```
 * Execute the programme with  
-```streamlit run music_identifier.py```
+```streamlit run Home.py```
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
