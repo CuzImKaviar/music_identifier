@@ -4,9 +4,7 @@ import numpy as np
 import librosa
 from scipy.ndimage import maximum_filter
 from scipy.signal import spectrogram
-import io
 import settings
-import wave
 import tempfile
 
 
@@ -225,5 +223,12 @@ def plot_all(filename):
 
 if __name__ == "__main__":
     audio = "C:\\Users\\sebba\\Desktop\\Musik_for_testing\\Never_Gonna_Give_You_Up.wav"
-    fig = plot_all(audio)
-    plt.show()
+    #fig = plot_all(audio)
+    #plt.show()
+    hashes = fingerprint_file(audio)
+    sorted_hashes = sorted(hashes, key=lambda hash_info: hash_info[1])
+
+    for hash_info in sorted_hashes:
+        hash, anchor_time_offset = hash_info
+        seconds = anchor_time_offset
+        print(f"Hash: {hash}, Time Offset: {seconds} seconds")
