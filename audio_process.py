@@ -111,7 +111,6 @@ def convert_bytes_to_wav(audio_bytes):
 
     # Open the temporary file as a wav file
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_file:
-    # Schreibe den Inhalt in das temporäre Dateiobjekt
         temp_file.write(audio_bytes)
     # Return the path to the temporary wav file
     return temp_file.name
@@ -126,9 +125,8 @@ def fingerprint_audio(audio_bytes):
     return fingerprint_file(wav_file)
 
 #----------------- PLOT FUNCTIONS -----------------#
-# create a temporary file used for plotting audio from streamlit
+# Create a temporary file used for plotting audio from streamlit
 def create_tempfile(audio):
-    # Create a temporary file
     with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmpfile:
         tmpfile.write(audio.getvalue())
         tmpfile_name = tmpfile.name
