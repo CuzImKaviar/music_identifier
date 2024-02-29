@@ -85,7 +85,7 @@ As this programme is only a mockup, the corresponding programming environment mu
 ### Close programme
 
 * Exit the programme with the following key combination in the terminal    
-```Strg + C ``` bzw. ```Ctrl + C ```
+```Strg + C ``` or ```Ctrl + C ```
 * Exit the virtual Pythen environment with    
 ```deactivate ```
 
