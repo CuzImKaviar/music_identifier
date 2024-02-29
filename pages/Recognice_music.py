@@ -16,15 +16,35 @@ def display_detected_Song(detected_song : Song) -> None:
 
     if detected_song:
         song = Metadata(detected_song.title, detected_song.artist)
-        st.write(song.print_infos())
-        # video_link = detected_song.search_youtube_video()
-        # if video_link:
-        #     st.video(video_link)
-        #     st.write(detected_song)
-        #     st.write("YouTube Video Link:", video_link)
-        # else:
-        #     st.write(detected_song)
-        #     st.write("Kein passendes Video gefunden.")
+
+        col1, col2 = st.columns([0.45, 0.55], gap="medium")
+
+        with col1:
+            st.image(song.cover, f"{song.title} Album Cover")
+
+        with col2:
+            info_yt_sptfy = ["Song Infos", "YouTube Music", "Spotify"]
+            tab1, tab2, tab3 = st.tabs(info_yt_sptfy)
+
+            with tab1:
+                st.write(f"**Title:**      {song.title}")
+                st.write(f"**Artist:**     {song.artist}")
+                st.write(f"**Album:**      {song.album}")
+                st.write(f"**Year:**       {song.year}")
+                st.write(f"**Duration:**   {song.duration}")
+                st.write(f"**View Count:** {song.viewCount}")
+
+            with tab2:
+                st.header(info_yt_sptfy[1])
+
+                st.link_button(f"Play song on YouTube Music", song.song_url_YTM, use_container_width=True)
+                st.link_button(f"Show album on YouTube Music", song.song_url_YTM, use_container_width=True)
+
+            with tab3:
+                st.header(info_yt_sptfy[2])
+
+                st.link_button(f"Play song on Spotify", song.song_url_sptfy, use_container_width=True)
+                st.link_button(f"Show album on Spotify", song.song_url_sptfy, use_container_width=True)
     else:
         st.error("Song konnte nicht erkannt werden.")
 
@@ -38,7 +58,6 @@ layout = "centered"
 
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
-    
 
 option = st.radio(
     'Wählen Sie eine Option:',

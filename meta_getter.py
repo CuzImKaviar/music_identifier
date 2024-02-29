@@ -4,8 +4,6 @@ from duckduckgo_search import DDGS
 from collections import namedtuple
 from urllib.parse import urlencode, urlunparse
 
-# from song import Song
-
 class Metadata():
     ytmusic = YTMusic()
     
@@ -169,4 +167,4 @@ if __name__ == "__main__":
     artist = "Ghost"
 
     song = Metadata(title, artist)
-    song.print_infos()
+    print(song.print_infos())
