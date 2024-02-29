@@ -21,3 +21,6 @@ TARGET_F = 4000
 
 FFT_WINDOW_SIZE = 0.2
 """ Size of the FFT window in seconds """
+
+MIN_SCORE = 10
+""" Minimum score for a match """

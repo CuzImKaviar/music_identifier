@@ -7,6 +7,7 @@ from urllib.parse import quote_plus
 from collections import defaultdict
 from pydub import AudioSegment
 from io import BytesIO
+from settings import MIN_SCORE
 
 class Song(Serializable):
     
@@ -103,7 +104,7 @@ class Song(Serializable):
                                             binwidth))
         print (F"max_hist = {np.max(hist) if len(hist) > 0 else print("0")}")
 
-        return np.max(hist) if len(hist) > 10 else 0
+        return np.max(hist) if len(hist) > 0 and np.max(hist) > MIN_SCORE else 0
 
     @classmethod
     def best_match(cls, matches):

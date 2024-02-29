@@ -75,4 +75,4 @@ elif option == 'Microphone-based music recognition':
                 except Exception as e:
                     st.error("Song could not be recognized.")
         except Exception as e:
-            st.error(f"Error recognizing the song: {e}")
+            st.error(f"Song not found!")
