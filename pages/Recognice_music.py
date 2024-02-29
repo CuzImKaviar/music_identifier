@@ -15,14 +15,16 @@ from meta_getter import Metadata
 def display_detected_Song(detected_song : Song) -> None:
 
     if detected_song:
-        video_link = detected_song.search_youtube_video()
-        if video_link:
-            st.video(video_link)
-            st.write(detected_song)
-            st.write("YouTube Video Link:", video_link)
-        else:
-            st.write(detected_song)
-            st.write("Kein passendes Video gefunden.")
+        song = Metadata(detected_song.title, detected_song.artist)
+        st.write(song.print_infos())
+        # video_link = detected_song.search_youtube_video()
+        # if video_link:
+        #     st.video(video_link)
+        #     st.write(detected_song)
+        #     st.write("YouTube Video Link:", video_link)
+        # else:
+        #     st.write(detected_song)
+        #     st.write("Kein passendes Video gefunden.")
     else:
         st.error("Song konnte nicht erkannt werden.")
 
@@ -74,4 +76,3 @@ elif option == 'Microphone-based music recognition':
             display_detected_Song(detected_song)
         else:
             st.error("No Sound Recorded!")
-
