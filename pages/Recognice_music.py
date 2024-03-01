@@ -53,7 +53,7 @@ def detect_Song(hashes : list) -> None:
             st.image(song.cover, f"{song.title} Album Cover")
 
         with col2:
-            info_yt_sptfy = ["Song Infos", "YouTube Music", "Spotify"]
+            info_yt_sptfy = ("Song Infos", "YouTube Music", "Spotify")
             tab1, tab2, tab3 = st.tabs(info_yt_sptfy)
 
             with tab1:
@@ -100,13 +100,11 @@ st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
 
 # -------------- SELECTION -------------- #
-option = st.radio(
-    'Choose an option:',
-    ('Upload file for music recognition', 'Microphone-based music recognition'))
-
+options = ('Upload file for music recognition', 'Microphone-based music recognition')
+option = st.radio('Choose an option:', options)
 
 # -------------- FILE UPLOAD -------------- #
-if option == 'Upload file for music recognition':
+if option == options[0]:
 
     # ------------ FILE UPLOARD FORM -------------- #
     with st.form("file-based", clear_on_submit=True):
@@ -133,7 +131,7 @@ if option == 'Upload file for music recognition':
 
 
 # -------------- MIC INUT -------------- #
-elif option == 'Microphone-based music recognition':
+elif option == options[1]:
 
     # ------------ MIC INUT -------------- #
     with st.container(border=True):
