@@ -14,21 +14,22 @@ from meta_getter import Metadata
 
 
 # -------------- DETECT SONG -------------- #
-def detect_Song(audio : bytes) -> None:
+# def detect_Song(audio : bytes) -> None:
+def detect_Song(detected_song : Song) -> None:
 
     # ------------ FINGERPRINT AUDIO -------------- #
-    try:
-        hashes = fingerprint_file(audio)
-    except Exception as e:
-        st.error(f"Error creating the fingerprint: {e}")
-        print(f"Error creating the fingerprint: {e}")
+    # try:
+    #     hashes = fingerprint_file(audio)
+    # except Exception as e:
+    #     st.error(f"Error creating the fingerprint: {e}")
+    #     print(f"Error creating the fingerprint: {e}")
 
     # ------------ IDENTIFY SONG -------------- #
-    try:
-        detected_song = Song.identify(hashes)
-    except Exception as e:
-        st.error(f"Error identifying the song: {e}")
-        print(f"Error identifying the song: {e}")
+    # try:
+    #     detected_song = Song.identify(hashes)
+    # except Exception as e:
+    #     st.error(f"Error identifying the song: {e}")
+    #     print(f"Error identifying the song: {e}")
 
     # ------------ DISPLAY META DATA -------------- #
     if detected_song:
@@ -107,7 +108,22 @@ if option == 'Upload file for music recognition':
         submitted = st.form_submit_button("Recognize song")
 
     if submitted and audio:
-        detect_Song(audio)
+
+        try:
+            hashes = fingerprint_file(audio)
+        except Exception as e:
+            st.error(f"Error creating the fingerprint: {e}")
+            print(f"Error creating the fingerprint: {e}")
+
+        # detected_song = Song.identify(hashes)
+        print("-------------------------------------------------")
+        try:
+            detected_song = Song.identify(hashes)
+        except Exception as e:
+            st.error(f"Error identifying the song: {e}")
+            print(f"Error identifying the song: {e}")
+
+        detect_Song(detected_song)
     elif submitted and not audio:
         st.error("No File selected!")
 
@@ -125,7 +141,24 @@ elif option == 'Microphone-based music recognition':
             submitted = st.form_submit_button("Song erkennen")
     
     if submitted and audio_bytes:
-        detect_Song(audio_bytes)
-        pass
+
+        # hashes = fingerprint_audio(audio_bytes)
+        
+        try:
+            hashes = fingerprint_audio(audio_bytes)
+        except Exception as e:
+            st.error(f"Error creating the fingerprint: {e}")
+            print(f"Error creating the fingerprint: {e}")
+
+        # detected_song = Song.identify(hashes)
+        print("-------------------------------------------------")
+        try:
+            detected_song = Song.identify(hashes)
+        except Exception as e:
+            st.error(f"Error identifying the song: {e}")
+            print(f"Error identifying the song: {e}")
+
+        detect_Song(detected_song)
+
     elif submitted and not audio_bytes:
         st.error("No Sound Recorded!")
