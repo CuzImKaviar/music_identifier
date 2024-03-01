@@ -100,7 +100,7 @@ st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
 
 # -------------- SELECTION -------------- #
-options = ('Upload file for music recognition', 'Microphone-based music recognition')
+options = ('Upload file for music recognition', 'Microphone-based music recognition','Link')
 option = st.radio('Choose an option:', options)
 
 # -------------- FILE UPLOAD -------------- #
@@ -133,7 +133,7 @@ if option == options[0]:
 # -------------- MIC INUT -------------- #
 elif option == options[1]:
 
-    # ------------ MIC INUT -------------- #
+    # ------------ MIC INPUT -------------- #
     with st.container(border=True):
         audio_bytes = audio_recorder(energy_threshold=(-1.0, 1.0), pause_threshold=6.0, sample_rate=41_000)
 
@@ -159,3 +159,12 @@ elif option == options[1]:
 
     elif submitted and not audio_bytes:
         st.error("No Sound Recorded!")
+
+elif option == 'Link':
+    with st.form("entry_form", clear_on_submit=True):
+        link = st.text_input("YouTube link", key="Link")
+        audio = Song.download_youtube_audio(link)
+        submitted_test = st.form_submit_button("Save new song")
+if submitted_test:
+    hashes = fingerprint_audio(audio)
+    detect_Song(hashes)

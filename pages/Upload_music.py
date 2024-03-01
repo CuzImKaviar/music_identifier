@@ -1,9 +1,10 @@
 import streamlit as st
 import time
 from song import Song
-from audio_process import fingerprint_file
+from audio_process import fingerprint_file,fingerprint_audio
 from audio_process import create_tempfile
 from audio_process import plot_waveform
+
 
 # -------------- SETTINGS -------------- #
 page_title = "Upload music"
@@ -13,12 +14,27 @@ layout = "centered"
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
 
+# -------------- SELECTION -------------- #
+option = st.radio(
+    'Choose an option:',
+    ("Link", "Upload"))
+
 # -------------- UPLOAD MUSIC -------------- #
-with st.form("entry_form", clear_on_submit=True):
-    song_name = st.text_input("Name of the song", max_chars=64, placeholder="Insert name here ...", key="Name")
-    song_artist = st.text_input("Name of the artist", max_chars=64, placeholder="Insert artist here ...", key="Artist")
-    audio = st.file_uploader("Upload an audio file", type=["mp3", "wav"])           
-    submitted = st.form_submit_button("Save new song")
+if option == "Link":
+    with st.form("entry_form", clear_on_submit=True):
+        song_name = st.text_input("Name of the song", max_chars=64, placeholder="Insert name here ...", key="Name")
+        song_artist = st.text_input("Name of the artist", max_chars=64, placeholder="Insert artist here ...", key="Artist")
+        link = st.text_input("YouTube link", key="Link")
+        audio = Song.download_youtube_audio(link)
+        
+
+        submitted = st.form_submit_button("Save new song")
+elif option == "Upload":
+    with st.form("entry_form", clear_on_submit=True):
+        song_name = st.text_input("Name of the song", max_chars=64, placeholder="Insert name here ...", key="Name")
+        song_artist = st.text_input("Name of the artist", max_chars=64, placeholder="Insert artist here ...", key="Artist")
+        audio = st.file_uploader("Upload an audio file", type=["mp3", "wav"])
+        submitted = st.form_submit_button("Save new song")
 
 
 # -------------- PROCESS AUDIO -------------- #
@@ -26,8 +42,9 @@ if audio and submitted:
     
     # ------------ CONVERT MP3 TO WAV -------------- #
     try:
-        if audio.type == "audio/mp3":
-            audio = Song.mp3_to_wav(audio)
+        if option == "Upload":
+            if audio.type == "audio/mp3":
+                audio = Song.mp3_to_wav(audio)
     except Exception as e:
         st.error(f"Error converting the audio file: {e}")
         print(f"Error converting the audio file: {e}")
@@ -39,7 +56,7 @@ if audio and submitted:
 
     # ------------ FINGERPRINT AUDIO -------------- #
     try:
-        hashes = fingerprint_file(audio)
+        hashes = fingerprint_audio(audio)
     except Exception as e:
         st.error(f"Error creating the fingerprint: {e}")
         print(f"Error creating the fingerprint: {e}")

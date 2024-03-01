@@ -8,6 +8,8 @@ from collections import defaultdict
 from pydub import AudioSegment
 from io import BytesIO
 from settings import MIN_SCORE
+from pytube import YouTube
+import io
 
 class Song(Serializable):
     
@@ -75,6 +77,25 @@ class Song(Serializable):
         wav_bytes = audio.export(format="wav").read()
         audio_wav = BytesIO(wav_bytes)
         return audio_wav
+    
+    def download_youtube_audio(youtube_url):
+        try:
+            # YouTube-Video herunterladen
+            yt = YouTube(youtube_url)
+            video = yt.streams.filter(only_audio=True).first()
+            
+            # Überprüfen, ob ein Video gefunden wurde
+            if not video:
+                raise Exception("No audio stream found for the given YouTube URL")
+            
+            # Herunterladen der Audiospur als Bytes
+            audio_bytes = io.BytesIO()
+            video.stream_to_buffer(audio_bytes)
+            audio_bytes.seek(0)
+            
+            return audio_bytes.getvalue()
+        except Exception as e:
+            return str(e).encode()
 
 
     def __str__(self):
