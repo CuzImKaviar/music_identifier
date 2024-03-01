@@ -15,7 +15,10 @@ from meta_getter import Metadata
 
 # -------------- SESSION STATE -------------- #
 if "form" not in st.session_state:
-    st.session_state["form"] = ""   
+    st.session_state["form"] = "" 
+
+if "download" not in st.session_state:
+    st.session_state["download"] = False  
 
 # -------------- DETECT SONG -------------- #
 def detect_Song(hashes : list) -> None:
@@ -31,8 +34,8 @@ def detect_Song(hashes : list) -> None:
     try:
         end_time = time.time()
         execution_time = end_time - start_time
-        st.write("Execution time to compared to Database:", execution_time, "seconds")
-        print("Execution time to compared to Database:", execution_time, "seconds")
+        st.write("Execution time comparing to Database:", execution_time, "seconds")
+        print("Execution time comparing to Database:", execution_time, "seconds")
     except Exception as e:
         st.error(f"Error calculating the execution time: {e}")
         print(f"Error calculating the execution time: {e}")
@@ -76,7 +79,7 @@ def detect_Song(hashes : list) -> None:
                 if song.album_url_YTM:
                     st.link_button(f"Show album on YouTube Music", song.album_url_YTM, use_container_width=True)
                 else:
-                    st.error("Unable to finde URL to album on YouTube Music with DuckDuckGo!")
+                    st.error("Unable to find URL to album on YouTube Music with DuckDuckGo!")
 
             with tab3:
                 st.header(info_yt_sptfy[2])
@@ -84,7 +87,7 @@ def detect_Song(hashes : list) -> None:
                 if song.song_url_sptfy:
                     st.link_button(f"Play song on Spotify", song.song_url_sptfy, use_container_width=True)
                 else:
-                    st.error("Unable to finde URL to song on Spotify with DuckDuckGo!")
+                    st.error("Unable to find URL to song on Spotify with DuckDuckGo!")
 
                 if song.album_url_sptfy:
                     st.link_button(f"Show album on Spotify", song.album_url_sptfy, use_container_width=True)
@@ -93,17 +96,19 @@ def detect_Song(hashes : list) -> None:
             
             with tab4:
                 if st.session_state["form"] == "download_form":
-                    with st.form("download_form", clear_on_submit=False):
-                        file_name = st.text_input("File name", max_chars=64, placeholder="(Optional) Insert filen ame here...", key="Name")
+                    with st.form("download_form", clear_on_submit=False):                
+                        file_name = st.text_input("File name", max_chars=64, placeholder="(Optional) Insert file name here...", key="Name")
                         file_path = st.text_input("File path", max_chars=64, placeholder="(Optional) Insert download path here...", key="Path")
                         download = st.form_submit_button("Download Song", use_container_width=True)
-            
-                    if download:
-                        print("Downloading...")
-                        song.download(file_name, file_path)
-        song.download()
+                if download:
+                    song.download(file_name, file_path)
+                    st.success(f"Downloaded {song.title} by {song.artist} to {file_path}/{file_name}.mp3")
+                    print(f"Downloaded {song.title} by {song.artist} to {file_path}/{file_name}.mp3")
+                    
+                    
+        
     else:
-        st.error("No fitting Song found in database.")
+        st.error("No fitting song found in database.")
 
 
 # -------------- SETTINGS -------------- #
@@ -143,7 +148,7 @@ if option == options[0]:
         detect_Song(hashes)
 
     elif submitted and not audio:
-        st.error("No File selected!")
+        st.error("No file selected!")
 
 
 # -------------- MIC INUT -------------- #
@@ -175,4 +180,4 @@ elif option == options[1]:
         detect_Song(hashes)
 
     elif submitted and not audio_bytes:
-        st.error("No Sound Recorded!")
+        st.error("No sound recorded!")
