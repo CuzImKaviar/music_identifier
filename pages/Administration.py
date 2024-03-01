@@ -2,7 +2,7 @@ import streamlit as st
 from song import Song
 import pandas as pd
 
-# -------------- SETTINGS --------------
+# -------------- SETTINGS -------------- #
 page_title = "Administration"
 page_icon = ":gear:"  # emojis: https://www.webfx.com/tools/emoji-cheat-sheet/
 layout = "centered"
@@ -10,19 +10,19 @@ layout = "centered"
 st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
 
-# -------------- SESSION STATES --------------
+# -------------- SESSION STATES -------------- #
 if "success" not in st.session_state:
     st.session_state["success"] = ""
 
 all_songs = Song.get_all_songs()
 
-# -------------- SORT SONGS BY TITLE --------------
+# -------------- SORT SONGS BY TITLE -------------- #
 options = [song.split(" by ") for song in all_songs]
 options = pd.DataFrame(options, columns=["Title", "Artist"])
 options = options.sort_values("Title")  
 options = options["Title"] + " by " + options["Artist"]
 
-# -------------- DELETE SONG --------------
+# -------------- DELETE SONG -------------- #
 with st.form("delete_form", clear_on_submit=True):
     song_to_delete = st.selectbox('Select a song', options=options, key="title")
 
@@ -40,7 +40,7 @@ with st.form("delete_form", clear_on_submit=True):
 if st.session_state["success"] != "" :        
     st.success(st.session_state["success"])
 
-# -------------- SHOW ALL SONGS --------------
+# -------------- SHOW ALL SONGS -------------- #
 if len(all_songs) != 0:
     song_data = [song.split(" by ") for song in all_songs]
     df = pd.DataFrame(song_data, columns=["Title", "Artist"])
