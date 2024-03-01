@@ -8,7 +8,9 @@
 
 This programme offers a way for recognising different songs via a user interface.
 
-This software receives small music excerpts and compares them with songs and music pices from the database. The aim is to identify the excerpt.
+This software receives small music excerpts and compares them with songs and music pices from the database. The aim is to identify the excerpt. 
+
+The database was implemented using SQLite3, and it was decided for clarity reasons to create a new table for each hashmap of a song. During testing, it was noticed that, on average, it is just as fast as storing everything in one table and finding the match, with the small databases we used.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -18,13 +20,14 @@ The programme includes the following basic implementations:
 * Music tracks are to be learnt in the web UI
 * Music tracks are to be identified in the web UI
 * Uploaded music tracks can be played in the browser
+* Music from the database are to be deleted in the web UI
 
 The programme also includes the following extensions:
-* Link to identified piece of music on Spotify/Youtube (+5%)
-* Determine metadata for music tracks (artist, album, etc.) (+5%)
-* Determine and display album cover of the music track with DuckDuckGo search API (+10%)
-* plotting the waveform of the piece of music (+20%)
-* Benchmarking of the application (duration of learning and identification) (+5%)
+* Link to identified piece of music on Spotify/Youtube
+* Determine metadata for music tracks (artist, album, etc.)
+* Determine and display album cover of the music track with DuckDuckGo search API
+* plotting the waveform of the piece of music
+* Benchmarking of the application (duration of learning and identification)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
@@ -67,7 +70,7 @@ The programme also includes the following extensions:
 As this programme is only a mockup, the corresponding programming environment must first be downloaded.
 * Download and install [Python 3.12.0](https://www.python.org/downloads/windows/)
 * Download and install [Visual Studio Code](https://code.visualstudio.com)
-*  Download the current version of the project from [GitHub](https://github.com/CuzImKaviar/music_identifier)
+* Download the current version of the project from [GitHub](https://github.com/CuzImKaviar/music_identifier)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
