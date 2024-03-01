@@ -14,15 +14,8 @@ from meta_getter import Metadata
 
 
 # -------------- DETECT SONG -------------- #
-def detect_Song(audio : bytes) -> None:
-
-    # ------------ FINGERPRINT AUDIO -------------- #
-    try:
-        hashes = fingerprint_file(audio)
-    except Exception as e:
-        st.error(f"Error creating the fingerprint: {e}")
-        print(f"Error creating the fingerprint: {e}")
-
+def detect_Song(hashes : list) -> None:
+    
     # ------------ IDENTIFY SONG -------------- #
     try:
         detected_song = Song.identify(hashes)
@@ -40,6 +33,7 @@ def detect_Song(audio : bytes) -> None:
             st.error(f"Error finging the meta data: {e}")
             print(f"Error finging the meta data: {e}")
 
+        # ------------ DISPLAYING META DATA -------------- #
         col1, col2 = st.columns([0.45, 0.55], gap="medium")
 
         with col1:
@@ -107,7 +101,17 @@ if option == 'Upload file for music recognition':
         submitted = st.form_submit_button("Recognize song")
 
     if submitted and audio:
-        detect_Song(audio)
+
+        # ------------ FINGERPRINT FILE -------------- #
+        try:
+            hashes = fingerprint_file(audio)
+        except Exception as e:
+            st.error(f"Error creating the fingerprint: {e}")
+            print(f"Error creating the fingerprint: {e}")
+
+        # -------------- DETECTING SONG -------------- #
+        detect_Song(hashes)
+
     elif submitted and not audio:
         st.error("No File selected!")
 
@@ -125,7 +129,16 @@ elif option == 'Microphone-based music recognition':
             submitted = st.form_submit_button("Song erkennen")
     
     if submitted and audio_bytes:
-        detect_Song(audio_bytes)
-        pass
+
+        # ------------ FINGERPRINT AUDIO -------------- #
+        try:
+            hashes = fingerprint_audio(audio_bytes)
+        except Exception as e:
+            st.error(f"Error creating the fingerprint: {e}")
+            print(f"Error creating the fingerprint: {e}")
+
+        # -------------- DETECTING SONG -------------- #
+        detect_Song(hashes)
+
     elif submitted and not audio_bytes:
         st.error("No Sound Recorded!")
