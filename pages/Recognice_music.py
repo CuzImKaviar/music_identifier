@@ -1,14 +1,7 @@
 import streamlit as st
-import numpy as np
 import time
-import librosa
-import librosa.display
-import matplotlib.pyplot as plt
-from scipy.ndimage import maximum_filter
-import settings as set
 from audio_process import fingerprint_file
 from audio_process import fingerprint_audio
-from audio_process import plot_all
 from audio_recorder_streamlit import audio_recorder
 from song import Song
 from meta_getter import Metadata

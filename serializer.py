@@ -52,14 +52,8 @@ class Serializable(ABC):
         """
         if a_list is None:
             table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
-            self.create_table(table_name, columns)
-            obj_dict = self.__dict__.copy()
-            obj_dict.pop('db_name', None)
-            obj_dict.pop('connection', None)
-            obj_dict.pop('cursor', None)
-            obj_dict.pop('db', None)
-            
-            values = [obj_dict.get(column) for column in columns]
+            self.create_table(table_name, columns)    
+            values = [self.__dict__.get(column) for column in columns]
             placeholders = ', '.join(['?' for _ in columns])
             self.cursor.execute(f"INSERT INTO {table_name} VALUES ({placeholders})", tuple(values))
             self.connection.commit()
@@ -69,7 +63,6 @@ class Serializable(ABC):
             placeholders = ', '.join(['?' for _ in columns])
             self.cursor.executemany(f"INSERT INTO {table_name} VALUES ({placeholders})", a_list)
             self.connection.commit()
-
 
     def deserialize(self, table_name, columns):
         """
@@ -90,22 +83,3 @@ class Serializable(ABC):
         Close the database connection.
         """
         self.connection.close()
-
-#    def get_matching_hashes(self, table_name, song_data):
-#        """
-#        Get the matching hashes and their time deltas in the given table.
-#        """
-#        table_name = table_name.replace(' ', '_').replace('(', '_').replace(')', '_')
-#        song_data = [(HASH, Time_Delta) for HASH, Time_Delta in song_data]
-#        matching_hashes = []
-#        BATCH_SIZE = 16000  # Set the batch size to avoid exceeding SQLite's limit
-#
-#        for i in range(0, len(song_data), BATCH_SIZE):
-#            batch = song_data[i:i + BATCH_SIZE]
-#            flat_batch = [item for sublist in batch for item in sublist]
-#            placeholders = ', '.join(['(?, ?)' for _ in batch])
-#            query = f"SELECT HASH, Time_Delta FROM {table_name} WHERE (HASH, Time_Delta) IN ({placeholders})"
-#            self.cursor.execute(query, flat_batch)
-#            matching_hashes.extend(self.cursor.fetchall())
-#
-#        return matching_hashes

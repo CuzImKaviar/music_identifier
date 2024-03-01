@@ -1,5 +1,3 @@
-import sqlite3
-from database import DatabaseClient
 from serializer import Serializable
 import requests
 import numpy as np
@@ -16,7 +14,6 @@ class Song(Serializable):
         self.title = title
         self.artist = artist
         self.hashmap = hashmap if hashmap is not None else []
-        self.db = DatabaseClient()
     
     def save(self):
         """
