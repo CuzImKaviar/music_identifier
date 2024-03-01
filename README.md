@@ -41,7 +41,8 @@ The programme also includes the following extensions:
 &emsp;[![Streamlit][Streamlit]][Streamlit-url]  
 &emsp;[![NumPy][NumPy]][NumPy-url]  
 &emsp;[![pandas][pandas]][pandas-url]  
-&emsp;[![SQLite 3][SQLite]][SQLite-url]  
+&emsp;[![SQLite][SQLite]][SQLite-url]  
+&emsp;[![SciPy][SciPy]][SciPy-url]  
 
 *(for more details see* [requirements.txt](requirements.txt) *)*
 
@@ -152,12 +153,14 @@ Inspiration, code snippets, etc.
 [Python-url]: https://www.python.org
 [Streamlit]: https://img.shields.io/badge/Streamlit-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=FFFFFF
 [Streamlit-url]: https://streamlit.io
-[SQLite]: https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=FFFFFF
-[SQLite-url]: https://www.sqlite.org
 [NumPy]: https://img.shields.io/badge/NumPy-013243?style=for-the-badge&logo=numpy&logoColor=FFFFFF
 [NumPy-url]: https://numpy.org
 [pandas]: https://img.shields.io/badge/pandas-150458?style=for-the-badge&logo=pandas&logoColor=FFFFFF
 [pandas-url]: https://pandas.pydata.org
+[SQLite]: https://img.shields.io/badge/SQLite-003B57?style=for-the-badge&logo=sqlite&logoColor=FFFFFF
+[SQLite-url]: https://www.sqlite.org
+[SciPy]: https://img.shields.io/badge/SciPy-003783?style=for-the-badge&logo=scipy&logoColor=FFFFFF
+[SciPy-url]: https://scipy.org
 [Git]: https://img.shields.io/badge/git-F1502F.svg?style=for-the-badge&logo=git&logoColor=white
 [Git-url]: https://git-scm.com
 [GitHub]: https://img.shields.io/badge/GitHub-100000?style=for-the-badge&logo=github&logoColor=white
