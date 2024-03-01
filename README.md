@@ -138,6 +138,9 @@ Inspiration, code snippets, etc.
 * [A simple README.md template](https://gist.github.com/DomPizzie/7a5ff55ffa9081f2de27c315f5018afc)
 * [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
 * [Python.gitignore](https://github.com/github/gitignore/blob/main/Python.gitignore)
+* [An Industrial-Strength Audio Search Algorithm](https://www.ee.columbia.edu/~dpwe/papers/Wang03-shazam.pdf)
+* [abracadabra: How does Shazam work?](https://www.cameronmacleod.com/blog/how-does-shazam-work)
+* [Audio Fingerprinting with Python and Numpy](https://willdrevo.com/fingerprinting-and-audio-recognition-with-python/)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
