@@ -12,6 +12,7 @@ from audio_recorder_streamlit import audio_recorder
 from song import Song
 from meta_getter import Metadata
 
+# -------------- DISPLAY META DATA --------------
 
 def display_detected_Song(detected_song : Song) -> None:
 
@@ -38,14 +39,26 @@ def display_detected_Song(detected_song : Song) -> None:
             with tab2:
                 st.header(info_yt_sptfy[1])
 
+                
                 st.link_button(f"Play song on YouTube Music", song.song_url_YTM, use_container_width=True)
-                st.link_button(f"Show album on YouTube Music", song.song_url_YTM, use_container_width=True)
+
+                if song.album_url_YTM:
+                    st.link_button(f"Show album on YouTube Music", song.album_url_YTM, use_container_width=True)
+                else:
+                    st.error("Unable to finde album on YouTube Music with DuckDuckGo!")
 
             with tab3:
                 st.header(info_yt_sptfy[2])
 
-                st.link_button(f"Play song on Spotify", song.song_url_sptfy, use_container_width=True)
-                st.link_button(f"Show album on Spotify", song.song_url_sptfy, use_container_width=True)
+                if song.song_url_sptfy:
+                    st.link_button(f"Play song on Spotify", song.song_url_sptfy, use_container_width=True)
+                else:
+                    st.error("Unable to finde song on Spotify with DuckDuckGo!")
+
+                if song.album_url_sptfy:
+                    st.link_button(f"Show album on Spotify", song.album_url_sptfy, use_container_width=True)
+                else:
+                    st.error("Unable to finde album on Spotify with DuckDuckGo!")
     else:
         st.error("Song konnte nicht erkannt werden.")
 
@@ -63,6 +76,8 @@ st.title(page_title + " " + page_icon)
 option = st.radio(
     'Choose an option:',
     ('Upload file for music recognition', 'Microphone-based music recognition'))
+
+# -------------- FILE UPLOAD --------------
 
 if option == 'Upload file for music recognition':
 
@@ -82,6 +97,8 @@ if option == 'Upload file for music recognition':
                 
         except Exception as e:
             st.error(f"Error recognizing the song: {e}")
+
+# -------------- MIC INUT --------------
 
 elif option == 'Microphone-based music recognition':
 
