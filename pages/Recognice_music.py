@@ -89,14 +89,16 @@ def detect_Song(hashes : list) -> None:
                     st.error("Unable to finde URL to album on Spotify with DuckDuckGo!")
             
             with tab4:
-                st.header(info_yt_sptfy[2])
-                with st.form("file-based", clear_on_submit=True,):
-                    file_name = st.text_input("File name", max_chars=64, placeholder="(Optional) Insert filen ame here...", key="Name")
-                    file_path = st.text_input("File path", max_chars=64, placeholder="(Optional) Insert download path here...", key="Path")
-                    download = st.form_submit_button("Download Song", use_container_width=True)
+                pass
+                # with st.container():
+                #     file_name = st.text_input("File name", max_chars=64, placeholder="(Optional) Insert filen ame here...", key="Name")
+                #     file_path = st.text_input("File path", max_chars=64, placeholder="(Optional) Insert download path here...", key="Path")
+                #     download = st.button("Download Song", use_container_width=True)
                 
-                if download:
-                    song.download(file_name, file_path)
+                # if download:
+                #     print("Downloading...")
+                #     song.download(file_name, file_path)
+        song.download()
     else:
         st.error("No fitting Song found in database.")
 
@@ -117,7 +119,7 @@ option = st.radio('Choose an option:', options)
 if option == options[0]:
 
     # ------------ FILE UPLOARD FORM -------------- #
-    with st.form("file-based", clear_on_submit=True):
+    with st.form("file-based", clear_on_submit=False):
         audio = st.file_uploader("Upload an audio clip", type=["mp3", "wav"])
         submitted = st.form_submit_button("Recognize song")
 
@@ -125,8 +127,6 @@ if option == options[0]:
 
         # ------------ START EXECUTION TIME -------------- #
         start_time = time.time()
-        print(f"---------------------------------------------")
-        print(f"AUDIO: {audio}")
 
         # ------------ FINGERPRINT FILE -------------- #
         try:

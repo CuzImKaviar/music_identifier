@@ -38,8 +38,8 @@ class Metadata():
     def download(self, name: str = None, path: str = None) -> None:
         # name = name if name else self.title
         # path = path if path else '.'
-
-        yt = YouTube(self.song_url_YTM)
+        yt = YouTube("https://www.youtube.com/watch?v=ZEcqHA7dbwM")
+        # yt = YouTube(self.song_url_YTM)
         video = yt.streams.filter(only_audio=True).first()
         out_file = video.download(output_path=path) 
 
