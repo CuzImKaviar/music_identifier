@@ -101,7 +101,7 @@ def detect_Song(hashes : list) -> None:
                     if download:
                         print("Downloading...")
                         song.download(file_name, file_path)
-        song.download()
+        song.download(file_name, file_path)
     else:
         st.error("No fitting Song found in database.")
 

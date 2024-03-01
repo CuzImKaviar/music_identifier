@@ -5,6 +5,8 @@ from collections import namedtuple
 from urllib.parse import urlencode, urlunparse
 from pytube import YouTube
 import os
+import requests
+from urllib.parse import quote_plus
 
 class Metadata():
     ytmusic = YTMusic()
@@ -36,17 +38,28 @@ class Metadata():
         print("Finised getting metadata.")
     
     def download(self, name: str = None, path: str = None) -> None:
-        # name = name if name else self.title
-        # path = path if path else '.'
-        yt = YouTube("https://www.youtube.com/watch?v=ZEcqHA7dbwM")
-        # yt = YouTube(self.song_url_YTM)
-        video = yt.streams.filter(only_audio=True).first()
-        out_file = video.download(output_path=path) 
+        name = name if name else f"{self.title} by {self.artist}"
+        path = path if path else '.'
 
-        # save the file 
-        base, ext = os.path.splitext(out_file) 
-        new_file = base + '.mp3'
-        os.rename(out_file, new_file) 
+        query = f"{self.title} {self.artist} official music video"
+        url = f"https://www.youtube.com/results?search_query={quote_plus(query)}"
+        response = requests.get(url)
+
+        if response.status_code == 200:
+            video_id = None
+            start_index = response.text.find('{"videoRenderer":{"videoId":"')
+            if start_index != -1:
+                end_index = response.text.find('"', start_index + 30)
+                video_id = response.text[start_index + 29:end_index]
+            if video_id:
+                yt = YouTube(f"https://www.youtube.com/watch?v={video_id}")
+                video = yt.streams.filter(only_audio=True).first()
+                out_file = video.download(output_path=path, filename=name) 
+
+                # save the file 
+                base, ext = os.path.splitext(out_file) 
+                new_file = base + '.mp3'
+                os.rename(out_file, new_file) 
 
     def print_infos(self) -> None:
         attrs = vars(self)
