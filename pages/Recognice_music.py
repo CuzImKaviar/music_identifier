@@ -1,5 +1,6 @@
 import streamlit as st
 import numpy as np
+import time
 import librosa
 import librosa.display
 import matplotlib.pyplot as plt
@@ -23,8 +24,20 @@ def detect_Song(hashes : list) -> None:
         st.error(f"Error identifying the song: {e}")
         print(f"Error identifying the song: {e}")
 
+    # ------------ CALCULATE EXECUTION TIME -------------- #
+    try:
+        end_time = time.time()
+        execution_time = end_time - start_time
+        st.write("Execution time to compared to Database:", execution_time, "seconds")
+        print("Execution time to compared to Database:", execution_time, "seconds")
+    except Exception as e:
+        st.error(f"Error calculating the execution time: {e}")
+        print(f"Error calculating the execution time: {e}")
+
     # ------------ DISPLAY META DATA -------------- #
     if detected_song:
+        st.write(f"Song successfully identified as:")
+        st.subheader(f"{detected_song.title} by {detected_song.artist}")
 
         # ------------ SEARCH META DATA -------------- #
         try:
@@ -60,7 +73,7 @@ def detect_Song(hashes : list) -> None:
                 if song.album_url_YTM:
                     st.link_button(f"Show album on YouTube Music", song.album_url_YTM, use_container_width=True)
                 else:
-                    st.error("Unable to finde album on YouTube Music with DuckDuckGo!")
+                    st.error("Unable to finde URL to album on YouTube Music with DuckDuckGo!")
 
             with tab3:
                 st.header(info_yt_sptfy[2])
@@ -68,14 +81,14 @@ def detect_Song(hashes : list) -> None:
                 if song.song_url_sptfy:
                     st.link_button(f"Play song on Spotify", song.song_url_sptfy, use_container_width=True)
                 else:
-                    st.error("Unable to finde song on Spotify with DuckDuckGo!")
+                    st.error("Unable to finde URL to song on Spotify with DuckDuckGo!")
 
                 if song.album_url_sptfy:
                     st.link_button(f"Show album on Spotify", song.album_url_sptfy, use_container_width=True)
                 else:
-                    st.error("Unable to finde album on Spotify with DuckDuckGo!")
+                    st.error("Unable to finde URL to album on Spotify with DuckDuckGo!")
     else:
-        st.error("Song konnte nicht erkannt werden.")
+        st.error("No fitting Song found in database.")
 
 
 # -------------- SETTINGS -------------- #
@@ -101,6 +114,9 @@ if option == 'Upload file for music recognition':
         submitted = st.form_submit_button("Recognize song")
 
     if submitted and audio:
+
+        # ------------ START EXECUTION TIME -------------- #
+        start_time = time.time()
 
         # ------------ FINGERPRINT FILE -------------- #
         try:
@@ -129,6 +145,9 @@ elif option == 'Microphone-based music recognition':
             submitted = st.form_submit_button("Song erkennen")
     
     if submitted and audio_bytes:
+
+        # ------------ START EXECUTION TIME -------------- #
+        start_time = time.time()
 
         # ------------ FINGERPRINT AUDIO -------------- #
         try:
