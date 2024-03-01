@@ -15,7 +15,15 @@ from meta_getter import Metadata
 
 # -------------- DETECT SONG -------------- #
 # def detect_Song(audio : bytes) -> None:
-def detect_Song(detected_song : Song) -> None:
+# def detect_Song(detected_song : Song) -> None:
+def detect_Song(hashes : list) -> None:
+    
+    # ------------ IDENTIFY SONG -------------- #
+    try:
+        detected_song = Song.identify(hashes)
+    except Exception as e:
+        st.error(f"Error identifying the song: {e}")
+        print(f"Error identifying the song: {e}")
 
     # ------------ FINGERPRINT AUDIO -------------- #
     # try:
@@ -115,15 +123,16 @@ if option == 'Upload file for music recognition':
             st.error(f"Error creating the fingerprint: {e}")
             print(f"Error creating the fingerprint: {e}")
 
-        # detected_song = Song.identify(hashes)
-        print("-------------------------------------------------")
-        try:
-            detected_song = Song.identify(hashes)
-        except Exception as e:
-            st.error(f"Error identifying the song: {e}")
-            print(f"Error identifying the song: {e}")
+        # # detected_song = Song.identify(hashes)
+        # print("-------------------------------------------------")
+        # try:
+        #     detected_song = Song.identify(hashes)
+        # except Exception as e:
+        #     st.error(f"Error identifying the song: {e}")
+        #     print(f"Error identifying the song: {e}")
 
-        detect_Song(detected_song)
+        # detect_Song(detected_song)
+        detect_Song(hashes)
     elif submitted and not audio:
         st.error("No File selected!")
 
@@ -151,14 +160,16 @@ elif option == 'Microphone-based music recognition':
             print(f"Error creating the fingerprint: {e}")
 
         # detected_song = Song.identify(hashes)
-        print("-------------------------------------------------")
-        try:
-            detected_song = Song.identify(hashes)
-        except Exception as e:
-            st.error(f"Error identifying the song: {e}")
-            print(f"Error identifying the song: {e}")
+        # print("-------------------------------------------------")
+        # try:
+        #     detected_song = Song.identify(hashes)
+        # except Exception as e:
+        #     st.error(f"Error identifying the song: {e}")
+        #     print(f"Error identifying the song: {e}")
 
-        detect_Song(detected_song)
+        # detect_Song(detected_song)
+        # print("-------------------------------------------------")
+        detect_Song(hashes)
 
     elif submitted and not audio_bytes:
         st.error("No Sound Recorded!")
