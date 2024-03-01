@@ -12,6 +12,8 @@ from audio_process import plot_all
 from audio_recorder_streamlit import audio_recorder
 from song import Song
 from meta_getter import Metadata
+from pytube import YouTube
+import ffmpeg
 
 
 # -------------- DETECT SONG -------------- #
@@ -100,7 +102,7 @@ st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
 
 # -------------- SELECTION -------------- #
-options = ('Upload file for music recognition', 'Microphone-based music recognition','Link')
+options = ('Upload file for music recognition', 'Microphone-based music recognition', 'Link')
 option = st.radio('Choose an option:', options)
 
 # -------------- FILE UPLOAD -------------- #
@@ -160,11 +162,22 @@ elif option == options[1]:
     elif submitted and not audio_bytes:
         st.error("No Sound Recorded!")
 
-elif option == 'Link':
+elif option == options[2]:
     with st.form("entry_form", clear_on_submit=True):
         link = st.text_input("YouTube link", key="Link")
-        audio = Song.download_youtube_audio(link)
         submitted_test = st.form_submit_button("Save new song")
-if submitted_test:
-    hashes = fingerprint_audio(audio)
-    detect_Song(hashes)
+
+    if submitted_test and link:
+
+        yt = YouTube(link)
+        stream_url = yt.streams.all()[0].url
+
+        audio, err = (
+            ffmpeg
+            .input(stream_url)
+            .output("pipe:", format='wav', acodec='pcm_s16le')  # Select WAV output format, and pcm_s16le auidio codec. My add ar=sample_rate
+            .run(capture_stdout=True)
+        )
+
+        hashes = fingerprint_audio(audio)
+        detect_Song(hashes)
