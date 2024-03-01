@@ -100,13 +100,11 @@ def detect_Song(hashes : list) -> None:
                         file_name = st.text_input("File name", max_chars=64, placeholder="(Optional) Insert file name here...", key="Name")
                         file_path = st.text_input("File path", max_chars=64, placeholder="(Optional) Insert download path here...", key="Path")
                         download = st.form_submit_button("Download Song", use_container_width=True)
-                if download:
-                    song.download(file_name, file_path)
-                    st.success(f"Downloaded {song.title} by {song.artist} to {file_path}/{file_name}.mp3")
-                    print(f"Downloaded {song.title} by {song.artist} to {file_path}/{file_name}.mp3")
-                    
-                    
-        
+            
+                    if download:
+                        print("Downloading...")
+                        song.download(file_name, file_path)
+        song.download()
     else:
         st.error("No fitting song found in database.")
 
