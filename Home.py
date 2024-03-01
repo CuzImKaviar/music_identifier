@@ -17,5 +17,5 @@ if col1.button("Upload Music", use_container_width=True):
     st.switch_page("pages/Upload_music.py")   
 if col2.button("Recognice Music", use_container_width=True):
     st.switch_page("pages/Recognice_music.py")  
-if col3.button("Edit Music", use_container_width=True):
-    st.switch_page("pages/Edit_music.py") 
+if col3.button("Administration", use_container_width=True):
+    st.switch_page("pages/Administration.py") 
