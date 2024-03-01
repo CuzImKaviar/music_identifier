@@ -13,6 +13,9 @@ from audio_recorder_streamlit import audio_recorder
 from song import Song
 from meta_getter import Metadata
 
+# -------------- SESSION STATE -------------- #
+if "form" not in st.session_state:
+    st.session_state["form"] = ""   
 
 # -------------- DETECT SONG -------------- #
 def detect_Song(hashes : list) -> None:
@@ -89,15 +92,15 @@ def detect_Song(hashes : list) -> None:
                     st.error("Unable to finde URL to album on Spotify with DuckDuckGo!")
             
             with tab4:
-                pass
-                # with st.container():
-                #     file_name = st.text_input("File name", max_chars=64, placeholder="(Optional) Insert filen ame here...", key="Name")
-                #     file_path = st.text_input("File path", max_chars=64, placeholder="(Optional) Insert download path here...", key="Path")
-                #     download = st.button("Download Song", use_container_width=True)
-                
-                # if download:
-                #     print("Downloading...")
-                #     song.download(file_name, file_path)
+                if st.session_state["form"] == "download_form":
+                    with st.form("download_form", clear_on_submit=False):
+                        file_name = st.text_input("File name", max_chars=64, placeholder="(Optional) Insert filen ame here...", key="Name")
+                        file_path = st.text_input("File path", max_chars=64, placeholder="(Optional) Insert download path here...", key="Path")
+                        download = st.form_submit_button("Download Song", use_container_width=True)
+            
+                    if download:
+                        print("Downloading...")
+                        song.download(file_name, file_path)
         song.download()
     else:
         st.error("No fitting Song found in database.")
@@ -122,6 +125,7 @@ if option == options[0]:
     with st.form("file-based", clear_on_submit=False):
         audio = st.file_uploader("Upload an audio clip", type=["mp3", "wav"])
         submitted = st.form_submit_button("Recognize song")
+        st.session_state["form"] = "download_form"
 
     if submitted and audio:
 
