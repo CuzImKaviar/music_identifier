@@ -12,8 +12,6 @@ from audio_process import plot_all
 from audio_recorder_streamlit import audio_recorder
 from song import Song
 from meta_getter import Metadata
-from pytube import YouTube
-import ffmpeg
 
 
 # -------------- DETECT SONG -------------- #
@@ -55,8 +53,8 @@ def detect_Song(hashes : list) -> None:
             st.image(song.cover, f"{song.title} Album Cover")
 
         with col2:
-            info_yt_sptfy = ("Song Infos", "YouTube Music", "Spotify")
-            tab1, tab2, tab3 = st.tabs(info_yt_sptfy)
+            info_yt_sptfy = ("Song Infos", "YouTube Music", "Spotify", "Download")
+            tab1, tab2, tab3, tab4 = st.tabs(info_yt_sptfy)
 
             with tab1:
                 st.write(f"**Title:**      {song.title}")
@@ -89,6 +87,16 @@ def detect_Song(hashes : list) -> None:
                     st.link_button(f"Show album on Spotify", song.album_url_sptfy, use_container_width=True)
                 else:
                     st.error("Unable to finde URL to album on Spotify with DuckDuckGo!")
+            
+            with tab4:
+                st.header(info_yt_sptfy[2])
+                with st.form("file-based", clear_on_submit=True,):
+                    file_name = st.text_input("File name", max_chars=64, placeholder="(Optional) Insert filen ame here...", key="Name")
+                    file_path = st.text_input("File path", max_chars=64, placeholder="(Optional) Insert download path here...", key="Path")
+                    download = st.form_submit_button("Download Song", use_container_width=True)
+                
+                if download:
+                    song.download(file_name, file_path)
     else:
         st.error("No fitting Song found in database.")
 
@@ -102,7 +110,7 @@ st.set_page_config(page_title=page_title, page_icon=page_icon, layout=layout)
 st.title(page_title + " " + page_icon)
 
 # -------------- SELECTION -------------- #
-options = ('Upload file for music recognition', 'Microphone-based music recognition', 'Link')
+options = ('Upload file for music recognition', 'Microphone-based music recognition')
 option = st.radio('Choose an option:', options)
 
 # -------------- FILE UPLOAD -------------- #
@@ -117,6 +125,8 @@ if option == options[0]:
 
         # ------------ START EXECUTION TIME -------------- #
         start_time = time.time()
+        print(f"---------------------------------------------")
+        print(f"AUDIO: {audio}")
 
         # ------------ FINGERPRINT FILE -------------- #
         try:
@@ -150,6 +160,7 @@ elif option == options[1]:
         start_time = time.time()
 
         # ------------ FINGERPRINT AUDIO -------------- #
+        
         try:
             hashes = fingerprint_audio(audio_bytes)
         except Exception as e:
@@ -161,23 +172,3 @@ elif option == options[1]:
 
     elif submitted and not audio_bytes:
         st.error("No Sound Recorded!")
-
-elif option == options[2]:
-    with st.form("entry_form", clear_on_submit=True):
-        link = st.text_input("YouTube link", key="Link")
-        submitted_test = st.form_submit_button("Save new song")
-
-    if submitted_test and link:
-
-        yt = YouTube(link)
-        stream_url = yt.streams.all()[0].url
-
-        audio, err = (
-            ffmpeg
-            .input(stream_url)
-            .output("pipe:", format='wav', acodec='pcm_s16le')  # Select WAV output format, and pcm_s16le auidio codec. My add ar=sample_rate
-            .run(capture_stdout=True)
-        )
-
-        hashes = fingerprint_audio(audio)
-        detect_Song(hashes)

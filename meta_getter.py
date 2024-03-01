@@ -3,6 +3,8 @@ from ytmusicapi import YTMusic
 from duckduckgo_search import DDGS
 from collections import namedtuple
 from urllib.parse import urlencode, urlunparse
+from pytube import YouTube
+import os
 
 class Metadata():
     ytmusic = YTMusic()
@@ -33,6 +35,19 @@ class Metadata():
 
         print("Finised getting metadata.")
     
+    def download(self, name: str = None, path: str = None) -> None:
+        # name = name if name else self.title
+        # path = path if path else '.'
+
+        yt = YouTube(self.song_url_YTM)
+        video = yt.streams.filter(only_audio=True).first()
+        out_file = video.download(output_path=path) 
+
+        # save the file 
+        base, ext = os.path.splitext(out_file) 
+        new_file = base + '.mp3'
+        os.rename(out_file, new_file) 
+
     def print_infos(self) -> None:
         attrs = vars(self)
         return '\n'.join("%s: %s" % item for item in attrs.items())
