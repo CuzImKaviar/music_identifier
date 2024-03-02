@@ -29,8 +29,8 @@ The programme also includes the following extensions:
 * plotting the waveform of the piece of music
 * Benchmarking of the application (duration of learning and identification)
 
-Note on the second branch:
-* In addition to the above-mentioned enhancements, the *Song_download* branch also includes a download function that automatically downloads a song from YouTube as soon as it is recognised and saves it as an mp3. However, as this function is not yet completely reliable (the download only works if the song on YouTube is an actuall Video and not just an Audio with a still image), it was decided not to merge it with the main branch yet.
+Note on the second branch:  
+In addition to the above-mentioned enhancements, the *Song_download* branch also includes a download function that automatically downloads a song from YouTube as soon as it is recognised and saves it as an mp3. However, as this function is not yet completely reliable (the download only works if the song on YouTube is an actuall Video and not just an Audio with a still image), it was decided not to merge it with the main branch yet.
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
