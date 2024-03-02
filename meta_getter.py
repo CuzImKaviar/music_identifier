@@ -37,11 +37,14 @@ class Metadata():
 
         print("Finised getting metadata.")
     
-    def download(self, name: str = None, path: str = None) -> None:
-        name = name if name else f"{self.title} by {self.artist}"
-        path = path if path else '.'
+    def download(self) -> str | None :
+        '''
+        Searches for the song on YouTube and trys to download the audio of found Video.
 
-        query = f"{self.title} {self.artist} official music video"
+        Returns path to downloaded file or None.
+        '''
+
+        query = f"{self.title} {self.artist}"
         url = f"https://www.youtube.com/results?search_query={quote_plus(query)}"
         response = requests.get(url)
 
@@ -54,12 +57,12 @@ class Metadata():
             if video_id:
                 yt = YouTube(f"https://www.youtube.com/watch?v={video_id}")
                 video = yt.streams.filter(only_audio=True).first()
-                out_file = video.download(output_path=path, filename=name) 
-
-                # save the file 
-                base, ext = os.path.splitext(out_file) 
-                new_file = base + '.mp3'
-                os.rename(out_file, new_file) 
+                out_file = video.download(output_path='Downloads', filename=f'{self.title} by {self.artist}.mp3')
+                return out_file
+        else:
+            return None
+        
+        
 
     def print_infos(self) -> None:
         attrs = vars(self)

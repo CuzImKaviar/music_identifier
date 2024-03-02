@@ -53,14 +53,15 @@ def detect_Song(hashes : list) -> None:
             print(f"Error finging the meta data: {e}")
 
         # ------------ DISPLAYING META DATA -------------- #
+            
         col1, col2 = st.columns([0.45, 0.55], gap="medium")
 
         with col1:
             st.image(song.cover, f"{song.title} Album Cover")
 
         with col2:
-            info_yt_sptfy = ("Song Infos", "YouTube Music", "Spotify", "Download")
-            tab1, tab2, tab3, tab4 = st.tabs(info_yt_sptfy)
+            info_yt_sptfy = ("Song Infos", "YouTube Music", "Spotify")
+            tab1, tab2, tab3 = st.tabs(info_yt_sptfy)
 
             with tab1:
                 st.write(f"**Title:**      {song.title}")
@@ -94,16 +95,13 @@ def detect_Song(hashes : list) -> None:
                 else:
                     st.error("Unable to finde URL to album on Spotify with DuckDuckGo!")
             
-            with tab4:
-                if st.session_state["form"] == "download_form":
-                    with st.form("download_form", clear_on_submit=False):                
-                        file_name = st.text_input("File name", max_chars=64, placeholder="(Optional) Insert file name here...", key="Name")
-                        file_path = st.text_input("File path", max_chars=64, placeholder="(Optional) Insert download path here...", key="Path")
-                        download = st.form_submit_button("Download Song", use_container_width=True)
-            
-                    if download:
-                        print("Downloading...")
-                        song.download(file_name, file_path)
+        # ------------ DOWNLOAD MP3 -------------- #
+        try:    
+            song.download()
+        except Exception as e:
+            st.error(f"Error finging the meta data: {e}")
+            print(f"Error finging the meta data: {e}")
+
     else:
         st.error("No fitting song found in database.")
 
